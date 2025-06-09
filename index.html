@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mercearia Micten - Sua mercearia de confiança</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+</head>
+<body>
+    <!-- Tela de Login -->
+    <div id="auth-screen" class="auth-screen">
+        <div class="auth-container">
+            <div class="auth-header">
+                <i class="fas fa-store"></i>
+                <h2>Mercearia Micten</h2>
+                <p>Sistema de Gestão</p>
+            </div>
+            <form id="loginForm" class="auth-form">
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" required>
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="form-group">
+                    <label for="password">Senha</label>
+                    <input type="password" id="password" required>
+                    <i class="fas fa-lock"></i>
+                </div>
+                <button type="submit" class="btn-auth">Entrar</button>
+                <div class="auth-links">
+                    <a href="#" onclick="mostrarRegistro()">Criar conta</a>
+                    <a href="#" onclick="recuperarSenha()">Esqueci a senha</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Site Principal -->
+    <div id="main-site" style="display: none;">
+        <!-- Header -->
+        <header class="header">
+            <nav class="navbar">
+                <div class="nav-brand">
+                    <i class="fas fa-store"></i>
+                    <span>Mercearia Micten</span>
+                </div>
+                <ul class="nav-menu" id="nav-menu">
+                    <li><a href="#inicio" class="nav-link active" data-section="inicio">Início</a></li>
+                    <li><a href="#produtos" class="nav-link" data-section="produtos">Produtos</a></li>
+                    <li><a href="#admin" class="nav-link" data-section="admin">Administração</a></li>
+                    <li><a href="#sobre" class="nav-link" data-section="sobre">Sobre Nós</a></li>
+                    <li><a href="#contato" class="nav-link" data-section="contato">Contato</a></li>
+                </ul>
+                <div class="nav-actions">
+                    <button class="action-btn" title="Gerar Relatório" onclick="gerarRelatorio()">
+                        <i class="fas fa-chart-bar"></i>
+                    </button>
+                    <button class="action-btn" title="Exportar Dados" onclick="exportarDados()">
+                        <i class="fas fa-download"></i>
+                    </button>
+                    <button class="action-btn" title="Importar Dados" onclick="importarDados()">
+                        <i class="fas fa-upload"></i>
+                    </button>
+                    <button class="action-btn" title="Sair" onclick="logout()">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
+                <div class="hamburger" id="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+            </nav>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Seção Início -->
+            <section id="inicio" class="section active">
+                <div class="hero">
+                    <div class="hero-content">
+                        <h1>Bem-vindos à Mercearia Micten</h1>
+                        <p>Sua mercearia de confiança com produtos frescos e de qualidade</p>
+                    </div>
+                </div>
+                
+                <div class="stats-container">
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="total-produtos">0</h3>
+                            <p>Produtos</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-warehouse"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="total-estoque">0</h3>
+                            <p>Itens em Estoque</p>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="valor-total">MZN 0.00</h3>
+                            <p>Valor Total</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção Produtos -->
+            <section id="produtos" class="section">
+                <div class="section-header">
+                    <h2>Nossos Produtos</h2>
+                </div>
+                
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-categoria="todos">Todos</button>
+                    <button class="filter-btn" data-categoria="hortifruti">Hortifruti</button>
+                    <button class="filter-btn" data-categoria="padaria">Padaria</button>
+                    <button class="filter-btn" data-categoria="laticinios">Laticínios</button>
+                    <button class="filter-btn" data-categoria="bebidas">Bebidas</button>
+                    <button class="filter-btn" data-categoria="limpeza">Limpeza</button>
+                </div>
+                
+                <div class="produtos-grid" id="produtos-grid">
+                    <!-- Produtos serão carregados dinamicamente -->
+                </div>
+            </section>
+
+            <!-- Seção Administração -->
+            <section id="admin" class="section">
+                <div class="section-header">
+                    <h2>Administração</h2>
+                </div>
+                
+                <div class="admin-tabs">
+                    <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+                    <button class="tab-btn" data-tab="estoque">Estoque</button>
+                    <button class="tab-btn" data-tab="vendas">Vendas</button>
+                </div>
+                
+                <div class="tab-content">
+                    <!-- Dashboard Tab -->
+                    <div id="dashboard-tab" class="tab-pane active">
+                        <div class="dashboard-grid">
+                            <div class="dashboard-card">
+                                <h3>Produtos Mais Vendidos</h3>
+                                <div id="produtos-vendidos">
+                                    <!-- Será preenchido dinamicamente -->
+                                </div>
+                            </div>
+                            <div class="dashboard-card">
+                                <h3>Estoque Baixo</h3>
+                                <div id="estoque-baixo">
+                                    <!-- Será preenchido dinamicamente -->
+                                </div>
+                            </div>
+                            <div class="dashboard-card">
+                                <h3>Vendas do Mês</h3>
+                                <div id="vendas-mes">
+                                    <div class="metric">
+                                        <span class="metric-value">MZN 0.00</span>
+                                        <span class="metric-label">Total</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Estoque Tab -->
+                    <div id="estoque-tab" class="tab-pane">
+                        <div class="estoque-header">
+                            <h3>Gerenciamento de Estoque</h3>
+                            <button class="btn-primary" onclick="adicionarProdutoModal()">
+                                <i class="fas fa-plus"></i> Novo Produto
+                            </button>
+                        </div>
+                        
+                        <div class="search-container">
+                            <input type="text" id="buscar-produto" placeholder="Buscar produto...">
+                            <i class="fas fa-search"></i>
+                        </div>
+                        
+                        <div class="table-container">
+                            <table class="produtos-table">
+                                <thead>
+                                    <tr>
+                                        <th>Produto</th>
+                                        <th>Categoria</th>
+                                        <th>Preço</th>
+                                        <th>Quantidade</th>
+                                        <th>Total</th>
+                                        <th>Ações</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="estoque-tbody">
+                                    <!-- Produtos serão carregados dinamicamente -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                    
+                    <!-- Vendas Tab -->
+                    <div id="vendas-tab" class="tab-pane">
+                        <div class="vendas-header">
+                            <h3>Registro de Vendas</h3>
+                            <button class="btn-primary" onclick="novaVenda()">
+                                <i class="fas fa-plus"></i> Nova Venda
+                            </button>
+                        </div>
+                        
+                        <div class="vendas-container">
+                            <div id="vendas-list">
+                                <!-- Vendas serão carregadas dinamicamente -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção Sobre Nós -->
+            <section id="sobre" class="section">
+                <div class="section-header">
+                    <h2>Sobre Nós</h2>
+                </div>
+                
+                <div class="sobre-content">
+                    <div class="sobre-text">
+                        <h3>Nossa História</h3>
+                        <p>A Mercearia Micten é uma empresa familiar que atende a comunidade há anos, oferecendo produtos frescos e de qualidade com atendimento personalizado.</p>
+                        
+                        <div class="caracteristicas">
+                            <div class="caracteristica">
+                                <i class="fas fa-leaf"></i>
+                                <h4>Produtos Frescos</h4>
+                                <p>Selecionamos cuidadosamente nossos produtos para garantir a máxima qualidade e frescor.</p>
+                            </div>
+                            <div class="caracteristica">
+                                <i class="fas fa-heart"></i>
+                                <h4>Atendimento Familiar</h4>
+                                <p>Tratamos cada cliente como parte da nossa família, com carinho e atenção especial.</p>
+                            </div>
+                            <div class="caracteristica">
+                                <i class="fas fa-clock"></i>
+                                <h4>Horário Flexível</h4>
+                                <p>Estamos abertos em horários convenientes para atender suas necessidades.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Seção Contato -->
+            <section id="contato" class="section">
+                <div class="section-header">
+                    <h2>Entre em Contato</h2>
+                </div>
+                
+                <div class="contato-content">
+                    <div class="contato-info">
+                        <div class="info-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <h4>Endereço</h4>
+                                <p>Rua das Flores, 123<br>Centro, Cidade - Estado<br>CEP: 12345-678</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-phone"></i>
+                            <div>
+                                <h4>Telefone</h4>
+                                <p>(+258) 865400070</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-envelope"></i>
+                            <div>
+                                <h4>Email</h4>
+                                <p>peixemicten@Gmail.com</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-clock"></i>
+                            <div>
+                                <h4>Horário de Funcionamento</h4>
+                                <p>Segunda a Sábado: 7h às 19h<br>Domingo: 8h às 17h</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="contato-form">
+                        <h3>Envie uma Mensagem</h3>
+                        <form id="contato-form">
+                            <div class="form-group">
+                                <label for="nome">Nome</label>
+                                <input type="text" id="nome" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="email-contato">Email</label>
+                                <input type="email" id="email-contato" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="assunto">Assunto</label>
+                                <input type="text" id="assunto" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="mensagem">Mensagem</label>
+                                <textarea id="mensagem" rows="5" required></textarea>
+                            </div>
+                            <button type="submit" class="btn-primary">Enviar Mensagem</button>
+                        </form>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>Mercearia Micten</h4>
+                    <p>Sua mercearia de confiança</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="https://wa.me/258865400070"><i class="fab fa-whatsapp"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Links Rápidos</h4>
+                    <ul>
+                        <li><a href="#inicio">Início</a></li>
+                        <li><a href="#produtos">Produtos</a></li>
+                        <li><a href="#admin">Administração</a></li>
+                        <li><a href="#sobre">Sobre Nós</a></li>
+                        <li><a href="#contato">Contato</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>Contato</h4>
+                    <p><i class="fas fa-phone"></i> (+258) 865400070</p>
+                    <p><i class="fas fa-envelope"></i> peixemicten@Gmail.com</p>
+                    <p><i class="fas fa-map-marker-alt"></i> Rua das Flores, 123</p>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2025 Mercearia Micten. Todos os direitos reservados.</p>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/script.js"></script>
+</body>
+</html>
+
