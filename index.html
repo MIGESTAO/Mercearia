@@ -232,6 +232,130 @@
                     </div>
                 </div>
             </section>
+            <!-- NOVA SEÇÃO DE VENDAS NO HTML -->
+<section id="vendas" class="section">
+  <div class="section-header">
+    <h2>Nova Venda</h2>
+  </div>
+
+  <div class="container vendas-form bg-white rounded p-4 shadow">
+    <form id="form-venda">
+      <div class="mb-3">
+        <label for="produto-venda" class="form-label">Produto</label>
+        <select class="form-select" id="produto-venda" required></select>
+      </div>
+      <div class="mb-3">
+        <label for="quantidade-venda" class="form-label">Quantidade</label>
+        <input type="number" class="form-control" id="quantidade-venda" required min="1">
+      </div>
+      <button type="submit" class="btn btn-success">Registrar Venda</button>
+    </form>
+  </div>
+
+  <div class="mt-5">
+    <h4>Histórico de Vendas</h4>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Data</th>
+          <th>Produto</th>
+          <th>Quantidade</th>
+          <th>Total</th>
+          <th>Ações</th>
+        </tr>
+      </thead>
+      <tbody id="tabela-vendas"></tbody>
+    </table>
+  </div>
+</section>
+
+<script>
+let historicoVendas = [];
+
+function carregarProdutosParaVenda() {
+  const select = document.getElementById("produto-venda");
+  select.innerHTML = '<option value="">Selecione</option>';
+  produtos.forEach(p => {
+    if (p.quantidade > 0) {
+      select.innerHTML += `<option value="${p.id}">${p.nome} - MZN ${p.preco.toFixed(2)}</option>`;
+    }
+  });
+}
+
+function registrarVenda(produtoId, quantidade) {
+  const produto = produtos.find(p => p.id == produtoId);
+  if (!produto || produto.quantidade < quantidade) {
+    Swal.fire("Erro", "Estoque insuficiente ou produto inválido", "error");
+    return;
+  }
+  produto.quantidade -= quantidade;
+  const total = produto.preco * quantidade;
+  const venda = {
+    id: Date.now(),
+    data: new Date().toLocaleString(),
+    produto: produto.nome,
+    quantidade,
+    total
+  };
+  historicoVendas.push(venda);
+  atualizarEstoqueFirebase(produto);
+  exibirHistoricoVendas();
+  updateStats();
+  renderEstoque();
+  Swal.fire("Sucesso", "Venda registrada com sucesso", "success");
+}
+
+function atualizarEstoqueFirebase(produto) {
+  firebase.database().ref('produtos/' + produto.id).update({ quantidade: produto.quantidade });
+}
+
+function exibirHistoricoVendas() {
+  const tbody = document.getElementById("tabela-vendas");
+  tbody.innerHTML = "";
+  historicoVendas.forEach(v => {
+    const row = `<tr>
+      <td>${v.data}</td>
+      <td>${v.produto}</td>
+      <td>${v.quantidade}</td>
+      <td>MZN ${v.total.toFixed(2)}</td>
+      <td><button class="btn btn-sm btn-danger" onclick="removerVenda(${v.id})">Excluir</button></td>
+    </tr>`;
+    tbody.innerHTML += row;
+  });
+}
+
+function removerVenda(id) {
+  const index = historicoVendas.findIndex(v => v.id === id);
+  if (index !== -1) {
+    const venda = historicoVendas[index];
+    const produto = produtos.find(p => p.nome === venda.produto);
+    if (produto) {
+      produto.quantidade += venda.quantidade;
+      atualizarEstoqueFirebase(produto);
+      updateStats();
+      renderEstoque();
+    }
+    historicoVendas.splice(index, 1);
+    exibirHistoricoVendas();
+    Swal.fire("Removido", "Venda excluída e estoque ajustado", "success");
+  }
+}
+
+document.getElementById("form-venda").addEventListener("submit", function(e) {
+  e.preventDefault();
+  const produtoId = document.getElementById("produto-venda").value;
+  const quantidade = parseInt(document.getElementById("quantidade-venda").value);
+  if (!produtoId || !quantidade || quantidade <= 0) return;
+  registrarVenda(produtoId, quantidade);
+  this.reset();
+  carregarProdutosParaVenda();
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+  carregarProdutosParaVenda();
+});
+</script>
+
 
             <!-- Seção Sobre Nós -->
             <section id="sobre" class="section">
