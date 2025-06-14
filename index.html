@@ -3,222 +3,520 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestão de Peixaria Micten - Otimizada</title>
+    <title>Gestão de Peixaria Micten - Multi-Tema & Multi-Língua</title>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
     <style>
+        /* ========================================= */
+        /* VARIÁVEIS GERAIS E TEMAS         */
+        /* ========================================= */
+
         :root {
-            --primary-color: #0077b6; --secondary-color: #00b4d8; --accent-color: #f39c12; --danger-color: #e74c3c; --info-color: #3498db; --profit-color: #1abc9c; --purple-color: #9b59b6; --dark-color: #34495e; --outflow-color: #e67e22; --text-color: #34495e; --bg-color: #f4f7f9; --card-bg: #ffffff; --border-color: #e1e4e8; --shadow: 0 8px 25px rgba(0, 0, 0, 0.08); --inner-shadow: 0 2px 5px rgba(0, 0, 0, 0.05); --border-radius: 12px; --transition-speed: 0.3s;
+            /* Variáveis que não mudam com o tema */
+            --shadow-glow: rgba(88, 166, 255, 0.25);
+            --border-radius: 10px;
+            --transition-speed: 0.35s;
         }
-        body { font-family: 'Poppins', sans-serif; background-color: var(--bg-color); margin: 0; padding: 20px; display: flex; justify-content: center; color: var(--text-color); line-height: 1.6; min-height: 100vh; box-sizing: border-box; overflow-x: hidden; }
-        .container { background-color: var(--card-bg); padding: 30px; border-radius: var(--border-radius); box-shadow: var(--shadow); width: 100%; max-width: 1600px; display: flex; flex-direction: column; gap: 30px; }
-        h1 { display: flex; align-items: center; justify-content: center; gap: 15px; color: var(--primary-color); text-align: center; margin-bottom: 30px; font-weight: 700; letter-spacing: -1px; font-size: 2.2em; background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        h1 .logo-icon { font-size: 1.2em; -webkit-text-fill-color: var(--primary-color); }
-        h2 { display: flex; justify-content: space-between; align-items: center; color: var(--dark-color); text-align: center; margin-bottom: 25px; font-weight: 600; font-size: 1.7em; border-bottom: 2px solid var(--border-color); padding-bottom: 10px; }
-        h3 { color: var(--dark-color); font-weight: 600; margin-top: 20px; margin-bottom: 15px; font-size: 1.2em; }
-        .navbar { display: flex; justify-content: center; gap: 10px; margin-bottom: 30px; flex-wrap: wrap; border-bottom: 1px solid var(--border-color); padding-bottom: 20px; }
-        .nav-button { padding: 10px 22px; background-color: var(--primary-color); color: white; border: none; border-radius: 8px; cursor: pointer; font-size: 0.95rem; font-weight: 600; transition: all var(--transition-speed) ease; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .nav-button i { margin-right: 8px; }
-        .nav-button:hover { transform: translateY(-3px); box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
-        .nav-button.active { background-color: var(--secondary-color); transform: translateY(0); }
-        .section { padding: 25px; border: 1px solid var(--border-color); border-radius: var(--border-radius); background-color: var(--card-bg); box-shadow: var(--inner-shadow); display: none; animation: fadeIn 0.5s ease-out; }
+
+        /* Tema Claro (Light) */
+        body[data-theme="light"] {
+            --bg-color: #f4f7f9;
+            --primary-color: #ffffff;
+            --card-bg: #ffffff;
+            --text-color: #34495e;
+            --text-color-muted: #7f8c8d;
+            --border-color: #e1e4e8;
+            --accent-color-1: #0077b6;
+            --accent-color-2: #1abc9c;
+            --accent-color-3: #e74c3c;
+            --accent-color-4: #9b59b6;
+            --accent-color-5: #f39c12;
+            --shadow-color: rgba(0, 0, 0, 0.08);
+            --shadow-card: 0 8px 25px var(--shadow-color);
+            --toast-success-bg: #e8f5e9;
+            --toast-success-color: #2e7d32;
+            --toast-error-bg: #ffebee;
+            --toast-error-color: #c62828;
+            --input-bg: #fdfdfd;
+        }
+
+        /* Tema Escuro (Dark) */
+        body[data-theme="dark"] {
+            --bg-color: #0d1117;
+            --primary-color: #161b22; /* Ligeiramente mais claro que o fundo */
+            --card-bg: #161b22;
+            --text-color: #c9d1d9;
+            --text-color-muted: #8b949e;
+            --border-color: #30363d;
+            --accent-color-1: #58a6ff;
+            --accent-color-2: #3fb950;
+            --accent-color-3: #f778ba;
+            --accent-color-4: #a371f7;
+            --accent-color-5: #e3b341;
+            --shadow-color: rgba(0, 0, 0, 0.4);
+            --shadow-card: 0 8px 32px 0 var(--shadow-color);
+            --toast-success-bg: #1c2b20;
+            --toast-success-color: #55d86a;
+            --toast-error-bg: #311f26;
+            --toast-error-color: #f778ba;
+            --input-bg: #0d1117;
+        }
+        
+        /* ========================================= */
+        /* ESTILOS DE BASE (Aplicam-se a ambos os temas) */
+        /* ========================================= */
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0; 
+            padding: 25px;
+            line-height: 1.6;
+            min-height: 100vh; 
+            overflow-x: hidden;
+            transition: background-color var(--transition-speed), color var(--transition-speed);
+        }
+        
+        .container {
+            background-color: var(--card-bg);
+            padding: 35px; 
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-card); 
+            border: 1px solid var(--border-color);
+            width: 100%; 
+            max-width: 1600px; 
+            display: flex;
+            flex-direction: column; 
+            gap: 30px; 
+            position: relative;
+            margin: 0 auto;
+            transition: background-color var(--transition-speed), border-color var(--transition-speed);
+        }
+
+        h1 {
+            display: flex; align-items: center; justify-content: center; gap: 15px; text-align: center; margin-bottom: 30px; font-weight: 700;
+            letter-spacing: -1px; font-size: 2.3em; background: linear-gradient(45deg, var(--accent-color-1), var(--accent-color-4));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+        h1 .logo-icon { -webkit-text-fill-color: var(--accent-color-1); animation: float 6s ease-in-out infinite; }
+        @keyframes float { 0% { transform: translateY(0px); } 50% { transform: translateY(-10px); } 100% { transform: translateY(0px); } }
+        h2 { color: var(--text-color); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; font-weight: 600; font-size: 1.8em; padding-bottom: 15px; }
+        h3 { color: var(--text-color); font-weight: 600; margin-top: 20px; margin-bottom: 15px; font-size: 1.3em; }
+
+        .top-controls { position: absolute; top: 20px; right: 20px; z-index: 10; display: flex; align-items: center; gap: 20px; }
+        .control-icon { font-size: 1.5rem; color: var(--text-color-muted); cursor: pointer; transition: color var(--transition-speed), transform var(--transition-speed); }
+        .control-icon:hover { color: var(--accent-color-1); transform: scale(1.1); }
+        .language-selector { position: relative; }
+        .language-dropdown { position: absolute; top: 100%; right: 0; background-color: var(--primary-color); border: 1px solid var(--border-color); border-radius: var(--border-radius); padding: 8px; margin-top: 10px; box-shadow: var(--shadow-card); display: none; flex-direction: column; gap: 5px; opacity: 0; transform: translateY(10px); transition: opacity var(--transition-speed) ease, transform var(--transition-speed) ease; }
+        .language-dropdown.visible { display: flex; opacity: 1; transform: translateY(0); }
+        .language-dropdown a { color: var(--text-color); text-decoration: none; padding: 8px 15px; border-radius: 6px; font-size: 0.9rem; transition: background-color var(--transition-speed), color var(--transition-speed); }
+        .language-dropdown a:hover { background-color: var(--accent-color-1); color: white; }
+
+        .navbar { display: flex; justify-content: center; gap: 12px; margin-bottom: 30px; flex-wrap: wrap; border-bottom: 1px solid var(--border-color); padding-bottom: 25px; }
+        .nav-button { padding: 10px 22px; background-color: var(--primary-color); color: var(--text-color); border: 1px solid var(--border-color); border-radius: var(--border-radius); cursor: pointer; font-size: 0.95rem; font-weight: 600; transition: all var(--transition-speed) ease; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .nav-button:hover { transform: translateY(-4px); background-color: var(--accent-color-1); color: white; border-color: var(--accent-color-1); }
+        .nav-button.active { background-color: var(--accent-color-1); color: white; transform: translateY(-2px); }
+        
+        .section { padding: 30px; border: 1px solid var(--border-color); border-radius: var(--border-radius); display: none; animation: fadeInUpSlight 0.6s ease-out forwards; }
         .section.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        .form-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 18px; margin-bottom: 25px; align-items: end; }
+        @keyframes fadeInUpSlight { from { opacity: 0; transform: translateY(20px) scale(0.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+
+        .form-group { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 25px; align-items: end; }
         .form-field { display: flex; flex-direction: column; }
-        .form-field label { margin-bottom: 8px; font-weight: 600; color: #555; font-size: 0.9em; }
-        input, select, textarea { width: 100%; box-sizing: border-box; padding: 12px 15px; border: 1px solid #ced4da; border-radius: 6px; font-size: 1rem; transition: all var(--transition-speed) ease; background-color: #fdfdfd; }
-        input:focus, select:focus, textarea:focus { border-color: var(--primary-color); box-shadow: 0 0 0 3px rgba(0, 119, 182, 0.15); outline: none; }
+        .form-field label { margin-bottom: 8px; font-weight: 600; color: var(--text-color-muted); font-size: 0.9em; }
+        input, select, textarea { width: 100%; box-sizing: border-box; padding: 12px 15px; border-radius: 8px; font-size: 1rem; transition: all var(--transition-speed) ease; background-color: var(--input-bg); color: var(--text-color); border: 1px solid var(--border-color); }
+        input:focus, select:focus, textarea:focus { border-color: var(--accent-color-1); box-shadow: 0 0 0 3px var(--shadow-glow); outline: none; background-color: var(--card-bg); }
         textarea { resize: vertical; min-height: 80px; }
-        button, .btn { padding: 12px 25px; background-color: var(--primary-color); color: white; border: none; border-radius: 6px; cursor: pointer; font-size: 1rem; font-weight: 600; transition: all var(--transition-speed) ease; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; }
-        button:disabled { background-color: #cccccc; cursor: not-allowed; transform: none; box-shadow: none; }
+
+        button, .btn { padding: 12px 25px; border-radius: 8px; cursor: pointer; font-weight: 600; transition: all var(--transition-speed) ease; display: inline-flex; align-items: center; justify-content: center; text-decoration: none; border: none; }
+        button i, .btn i { margin-right: 8px; }
+        button span, .btn span { margin: 0; }
+        button:hover, .btn:hover { filter: brightness(1.15); box-shadow: 0 4px 12px rgba(0,0,0,0.4); transform: translateY(-2px); }
+        button:disabled { background-color: #555 !important; color: #999 !important; cursor: not-allowed; transform: none; box-shadow: none; filter: brightness(1); }
         .btn-sm { padding: 8px 15px; font-size: 0.9rem; }
-        .btn-download { background-color: var(--secondary-color); }
-        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
-        table th, table td { border-bottom: 1px solid var(--border-color); padding: 12px 15px; text-align: left; vertical-align: middle; font-size: 0.9rem; }
-        table th { background-color: #f8f9fa; color: #555; font-weight: 600; text-transform: uppercase; font-size: 0.8rem; }
-        table th.sortable { cursor: pointer; }
-        table th.sortable:hover { background-color: #e9ecef; }
-        table th .sort-icon { margin-left: 8px; color: #aaa; }
-        table tbody tr:hover { background-color: #f1f8ff; }
-        .stock-low { color: var(--danger-color); font-weight: bold; }
-        .delete-btn { background-color: var(--danger-color); } .delete-btn:hover { background-color: #c0392b; }
-        .edit-btn { background-color: var(--secondary-color); } .edit-btn:hover { background-color: #0091ad; }
-        .adjust-btn { background-color: var(--accent-color); } .adjust-btn:hover { background-color: #d68910; }
+        .btn-download { background-color: var(--accent-color-4); color: white; }
+        .delete-btn { background-color: var(--accent-color-3); color: white; }
+        .edit-btn { background-color: var(--accent-color-1); color: white; }
+        .adjust-btn { background-color: var(--accent-color-5); color: #111; }
+
+        table { width: 100%; border-collapse: collapse; margin-top: 25px; }
+        table th, table td { border-bottom: 1px solid var(--border-color); padding: 14px 16px; text-align: left; vertical-align: middle; font-size: 0.95rem; }
+        table th { background-color: var(--primary-color); color: var(--text-color); font-weight: 600; text-transform: uppercase; font-size: 0.8rem; }
+        table th.sortable { cursor: pointer; transition: background-color var(--transition-speed); }
+        table th.sortable:hover { background-color: var(--border-color); }
+        table th .sort-icon { margin-left: 8px; color: var(--text-color-muted); }
+        table tbody tr { transition: background-color var(--transition-speed), color var(--transition-speed); }
+        table tbody tr:hover { background-color: rgba(88, 166, 255, 0.1); }
+        .stock-low { color: var(--accent-color-3); font-weight: bold; }
         .action-cell { display: flex; gap: 8px; flex-wrap: wrap; }
-        .action-cell button { padding: 7px 12px; font-size: 0.8rem; }
-        .dashboard-header { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; margin-bottom: 20px; }
-        .dashboard-filters .btn-group { display: flex; gap: 5px; background-color: #e9ecef; padding: 5px; border-radius: 8px; }
-        .dashboard-filters .btn-group button { background-color: transparent; border: none; color: var(--dark-color); font-weight: 600; padding: 8px 15px; border-radius: 6px; cursor: pointer; }
-        .dashboard-filters .btn-group button.active { background-color: var(--card-bg); color: var(--primary-color); box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
-        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 30px; }
-        .stat-card { color: white; padding: 25px; border-radius: var(--border-radius); transition: all var(--transition-speed) ease; position: relative; overflow: hidden; }
-        .stat-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.15); }
-        .stat-card .stat-icon { font-size: 2.5em; opacity: 0.8; position: absolute; right: 20px; top: 50%; transform: translateY(-50%); }
-        .stat-card h3 { margin: 0 0 10px 0; font-size: 1.1em; font-weight: 600; }
-        .stat-card p { font-size: 2.2em; font-weight: 700; margin: 0; line-height: 1; }
-        .stat-card.sales { background: linear-gradient(45deg, var(--info-color), #5dade2); }
-        .stat-card.profit { background: linear-gradient(45deg, var(--profit-color), #2ecc71); }
-        .stat-card.outflow { background: linear-gradient(45deg, var(--outflow-color), #f39c12); }
-        .stat-card.products { background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); }
-        .stat-card.low-stock { background: linear-gradient(45deg, var(--danger-color), #f1948a); }
-        .toast-container { position: fixed; top: 20px; right: 20px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; }
-        .toast { padding: 15px 20px; border-radius: 8px; font-weight: 600; box-shadow: 0 5px 15px rgba(0,0,0,0.2); opacity: 0; transform: translateX(100%); transition: all 0.5s cubic-bezier(0.68, -0.55, 0.27, 1.55); display: flex; align-items: center; gap: 10px; }
-        .toast.show { opacity: 1; transform: translateX(0); }
-        .toast.success { background-color: #e8f5e9; color: #2e7d32; border-left: 5px solid var(--secondary-color); }
-        .toast.error { background-color: #ffebee; color: #c62828; border-left: 5px solid var(--danger-color); }
-        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(255, 255, 255, 0.85); display: flex; justify-content: center; align-items: center; z-index: 1000; visibility: hidden; opacity: 0; transition: all 0.3s; }
+
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-bottom: 30px; }
+        .stat-card { color: white; padding: 25px; border-radius: var(--border-radius); transition: all var(--transition-speed) ease-in-out; position: relative; overflow: hidden; border: 1px solid var(--border-color); background-color: var(--primary-color); }
+        .stat-card:hover { transform: translateY(-8px) scale(1.02); box-shadow: 0 12px 25px var(--shadow-color); border-color: var(--accent-color-1); }
+        .stat-card:hover .stat-icon { transform: translateY(-50%) scale(1.2) rotate(5deg); opacity: 1; }
+        .stat-card .stat-icon { font-size: 2.8em; opacity: 0.5; position: absolute; right: 20px; top: 50%; transform: translateY(-50%); transition: all var(--transition-speed) ease; }
+        .stat-card h3 { margin: 0 0 10px 0; font-size: 1.1em; font-weight: 600; color: var(--text-color-muted); transition: color var(--transition-speed) ease; }
+        .stat-card p { font-size: 2.3em; font-weight: 700; margin: 0; line-height: 1; color: var(--text-color); }
+        .stat-card.sales { border-left: 5px solid var(--accent-color-1); }
+        .stat-card.profit { border-left: 5px solid var(--accent-color-2); }
+        .stat-card.outflow { border-left: 5px solid var(--accent-color-5); }
+        .stat-card.products { border-left: 5px solid var(--accent-color-4); }
+        .stat-card.low-stock { border-left: 5px solid var(--accent-color-3); }
+
+        .search-bar { margin: 25px 0; display: flex; gap: 10px; align-items: center; max-width: 450px; }
+        .search-bar i { color: var(--text-color-muted); }
+        .dashboard-filters .btn-group { display: flex; gap: 5px; background-color: var(--primary-color); padding: 5px; border-radius: 8px; }
+        .dashboard-filters .btn-group button { background-color: transparent; border: none; color: var(--text-color-muted); font-weight: 600; padding: 8px 15px; border-radius: 6px; cursor: pointer; box-shadow: none; }
+        .dashboard-filters .btn-group button.active { background-color: var(--accent-color-1); color: white; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+
+        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center; z-index: 1000; visibility: hidden; opacity: 0; transition: all 0.3s; }
+        body[data-theme="dark"] .loading-overlay { background-color: rgba(13, 17, 23, 0.85); backdrop-filter: blur(5px); }
+        body[data-theme="light"] .loading-overlay { background-color: rgba(255, 255, 255, 0.85); }
         .loading-overlay.visible { visibility: visible; opacity: 1; }
-        .loading-spinner { border: 8px solid #f3f3f3; border-top: 8px solid var(--primary-color); border-radius: 50%; width: 70px; height: 70px; animation: spin 1s linear infinite; }
+        .loading-spinner { border: 5px solid var(--border-color); border-top-color: var(--accent-color-1); border-right-color: var(--accent-color-1); border-radius: 50%; width: 70px; height: 70px; animation: spin 1s linear infinite; }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        .search-bar { margin: 20px 0; display: flex; gap: 10px; align-items: center; max-width: 400px; }
-        .search-bar i { color: #aaa; }
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0,0,0,0.6); display: flex; justify-content: center; align-items: center; z-index: 1002; visibility: hidden; opacity: 0; transition: all 0.3s; }
+        
+        .toast-container { position: fixed; bottom: 20px; left: 20px; z-index: 2000; display: flex; flex-direction: column; gap: 10px; }
+        .toast { padding: 16px 22px; border-radius: 8px; font-weight: 600; box-shadow: 0 5px 20px rgba(0,0,0,0.5); opacity: 0; transform: translateY(100%); transition: all 0.5s cubic-bezier(0.215, 0.610, 0.355, 1); display: flex; align-items: center; gap: 12px; border: 1px solid var(--border-color); }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .toast.success { background-color: var(--toast-success-bg); color: var(--toast-success-color); border-left: 5px solid var(--accent-color-2); }
+        .toast.error { background-color: var(--toast-error-bg); color: var(--toast-error-color); border-left: 5px solid var(--accent-color-3); }
+
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 1002; display: flex; justify-content: center; align-items: center; visibility: hidden; opacity: 0; transition: all 0.4s ease; }
+        body[data-theme="dark"] .modal { background-color: rgba(13, 17, 23, 0.7); backdrop-filter: blur(8px); }
+        body[data-theme="light"] .modal { background-color: rgba(0,0,0,0.6); }
         .modal.visible { visibility: visible; opacity: 1; }
-        .modal-content { background-color: white; padding: 30px; border-radius: var(--border-radius); box-shadow: var(--shadow); max-width: 450px; text-align: center; transform: scale(0.9); opacity: 0; transition: all 0.3s ease-out; }
-        .modal.visible .modal-content { transform: scale(1); opacity: 1; }
-        .modal-content .button-group { display: flex; justify-content: center; gap: 15px; margin-top: 20px; }
+        .modal-content { background-color: var(--card-bg); border: 1px solid var(--border-color); padding: 35px; border-radius: var(--border-radius); box-shadow: var(--shadow-card); max-width: 480px; text-align: center; transform: scale(0.9) translateY(20px); opacity: 0; transition: all 0.4s cubic-bezier(0.215, 0.610, 0.355, 1); }
+        .modal.visible .modal-content { transform: scale(1) translateY(0); opacity: 1; }
+        .modal-content .button-group { display: flex; justify-content: center; gap: 15px; margin-top: 25px; }
+
         .auth-section { max-width: 450px; margin: 50px auto; padding: 40px; }
-        .auth-form { display: flex; flex-direction: column; gap: 15px; }
-        .auth-toggle { margin-top: 20px; font-size: 0.9em; }
-        .auth-toggle a { color: var(--primary-color); text-decoration: none; font-weight: 600; }
+        .auth-form { display: flex; flex-direction: column; gap: 20px; }
+        .auth-toggle { margin-top: 20px; font-size: 0.9em; color: var(--text-color-muted); }
+        .auth-toggle a { color: var(--accent-color-1); text-decoration: none; font-weight: 600; }
         .auth-toggle a:hover { text-decoration: underline; }
+
+        footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; color: var(--text-color-muted); font-size: 0.9rem; }
+        .footer-links { display: flex; align-items: center; gap: 15px; }
+        .footer-links a { color: var(--text-color-muted); font-size: 1.5rem; text-decoration: none; transition: color var(--transition-speed), transform var(--transition-speed); }
+        .footer-links a:hover { transform: scale(1.1); }
+        .footer-links a.whatsapp:hover { color: #25D366; }
+        .footer-links a.email:hover { color: var(--accent-color-5); }
     </style>
 </head>
-<body>
+<body data-theme="dark">
     <div id="toast-container" class="toast-container"></div>
     <div class="loading-overlay" id="loading-overlay"><div class="loading-spinner"></div></div>
 
     <div class="modal" id="stock-adjustment-modal">
         <div class="modal-content">
-            <h3>Ajustar Stock</h3>
-            <p>Produto: <strong id="adjustment-product-name"></strong></p>
-            <p>Quantidade Atual: <strong id="adjustment-current-stock"></strong></p>
+            <h3 data-translate-key="adjustStockTitle">Ajustar Stock</h3>
+            <p><span data-translate-key="productLabel">Produto</span>: <strong id="adjustment-product-name"></strong></p>
+            <p><span data-translate-key="currentStockLabel">Quantidade Atual</span>: <strong id="adjustment-current-stock"></strong></p>
             <form id="stock-adjustment-form">
                 <input type="hidden" id="adjustment-product-id">
-                <div class="form-field" style="margin-bottom: 15px; text-align: left;"><label for="adjustment-new-quantity">Nova Quantidade Correta</label><input type="number" id="adjustment-new-quantity" min="0" required></div>
-                <div class="form-field" style="margin-bottom: 20px; text-align: left;"><label for="adjustment-reason">Motivo do Ajuste</label><textarea id="adjustment-reason" placeholder="Ex: Correção de contagem, produto danificado..." required></textarea></div>
-                <div class="button-group"><button type="submit" class="adjust-btn"><i class="fas fa-check"></i> Confirmar Ajuste</button><button type="button" id="cancel-adjustment-btn"><i class="fas fa-times"></i> Cancelar</button></div>
+                <div class="form-field" style="margin-bottom: 15px; text-align: left;"><label for="adjustment-new-quantity" data-translate-key="newQuantityLabel">Nova Quantidade Correta</label><input type="number" id="adjustment-new-quantity" min="0" required></div>
+                <div class="form-field" style="margin-bottom: 20px; text-align: left;"><label for="adjustment-reason" data-translate-key="adjustmentReasonLabel">Motivo do Ajuste</label><textarea id="adjustment-reason" required data-translate-placeholder="adjustReasonPlaceholder"></textarea></div>
+                <div class="button-group"><button type="submit" class="adjust-btn"><i class="fas fa-check"></i> <span data-translate-key="btnConfirmAdjustment">Confirmar Ajuste</span></button><button type="button" id="cancel-adjustment-btn" class="delete-btn"><i class="fas fa-times"></i> <span data-translate-key="btnCancel">Cancelar</span></button></div>
             </form>
         </div>
     </div>
     
     <div class="container">
-        <h1><i class="fas fa-fish logo-icon"></i> Gestão de Peixaria Micten</h1>
+        <div class="top-controls">
+            <div id="theme-toggle" class="control-icon" title="Mudar tema">
+                <i class="fas fa-sun"></i>
+            </div>
+            <div class="language-selector">
+                <i class="fas fa-globe control-icon" id="lang-icon"></i>
+                <div class="language-dropdown" id="lang-dropdown">
+                    <a href="#" data-lang="pt">Português</a>
+                    <a href="#" data-lang="en">English</a>
+                    <a href="#" data-lang="ny">Nyanja</a>
+                </div>
+            </div>
+        </div>
+
+        <h1><i class="fas fa-fish logo-icon"></i> <span data-translate-key="appTitle">Gestão de Peixaria Micten</span></h1>
 
         <nav class="navbar" id="main-navbar" style="display: none;">
-            <button class="nav-button" data-section="dashboard-section" onclick="showSection('dashboard-section')"><i class="fas fa-chart-pie"></i> Dashboard</button>
-            <button class="nav-button" data-section="product-management-section" onclick="showSection('product-management-section')"><i class="fas fa-boxes-stacked"></i> Produtos</button>
-            <button class="nav-button" data-section="stock-management-section" onclick="showSection('stock-management-section')"><i class="fas fa-warehouse"></i> Stock</button>
-            <button class="nav-button" data-section="sale-registration-section" onclick="showSection('sale-registration-section')"><i class="fas fa-cash-register"></i> Vender</button>
-            <button class="nav-button" data-section="profit-report-section" onclick="showSection('profit-report-section')"><i class="fas fa-percent"></i> Relatório de Lucros</button>
-            <button class="nav-button" data-section="history-section" onclick="showSection('history-section')"><i class="fas fa-history"></i> Histórico</button>
-            <button class="nav-button delete-btn" onclick="logoutUser()"><i class="fas fa-sign-out-alt"></i> Sair</button>
+            <button class="nav-button" data-section="dashboard-section" onclick="showSection('dashboard-section')"><i class="fas fa-chart-pie"></i> <span data-translate-key="navDashboard">Dashboard</span></button>
+            <button class="nav-button" data-section="product-management-section" onclick="showSection('product-management-section')"><i class="fas fa-boxes-stacked"></i> <span data-translate-key="navProducts">Produtos</span></button>
+            <button class="nav-button" data-section="stock-management-section" onclick="showSection('stock-management-section')"><i class="fas fa-warehouse"></i> <span data-translate-key="navStock">Stock</span></button>
+            <button class="nav-button" data-section="sale-registration-section" onclick="showSection('sale-registration-section')"><i class="fas fa-cash-register"></i> <span data-translate-key="navSell">Vender</span></button>
+            <button class="nav-button" data-section="profit-report-section" onclick="showSection('profit-report-section')"><i class="fas fa-percent"></i> <span data-translate-key="navProfitReport">Relatório de Lucros</span></button>
+            <button class="nav-button" data-section="history-section" onclick="showSection('history-section')"><i class="fas fa-history"></i> <span data-translate-key="navHistory">Histórico</span></button>
+            <button class="nav-button delete-btn" onclick="logoutUser()"><i class="fas fa-sign-out-alt"></i> <span data-translate-key="navLogout">Sair</span></button>
         </nav>
 
         <main>
             <section id="auth-section" class="section auth-section">
                 <div id="login-form-container">
-                    <h2><i class="fas fa-sign-in-alt"></i> Login</h2>
-                    <div class="auth-form"><input type="email" id="login-email" placeholder="Seu Email" required><input type="password" id="login-password" placeholder="Sua Senha" required><button onclick="loginUser()">Entrar</button></div>
-                    <p class="auth-toggle">Não tem uma conta? <a href="#" onclick="toggleAuthForm('register')">Registe-se aqui</a></p>
-                    <p class="auth-toggle"><a href="#" onclick="toggleAuthForm('forgot-password')">Esqueceu a senha?</a></p>
+                    <h2><i class="fas fa-sign-in-alt"></i> <span data-translate-key="loginTitle">Login</span></h2>
+                    <div class="auth-form">
+                        <input type="email" id="login-email" required data-translate-placeholder="placeholderEmail">
+                        <input type="password" id="login-password" required data-translate-placeholder="placeholderPassword">
+                        <button onclick="loginUser()"><span data-translate-key="btnLogin">Entrar</span></button>
+                    </div>
+                    <p class="auth-toggle"><span data-translate-key="noAccount">Não tem uma conta?</span> <a href="#" onclick="toggleAuthForm('register')" data-translate-key="registerHere">Registe-se aqui</a></p>
+                    <p class="auth-toggle"><a href="#" onclick="toggleAuthForm('forgot-password')" data-translate-key="forgotPasswordLink">Esqueceu a senha?</a></p>
                 </div>
                 <div id="register-form-container" style="display: none;">
-                    <h2><i class="fas fa-user-plus"></i> Registo</h2>
-                    <div class="auth-form"><input type="email" id="register-email" placeholder="Seu Email" required><input type="password" id="register-password" placeholder="Sua Senha (mín. 6 caracteres)" required><input type="password" id="register-confirm-password" placeholder="Confirmar Senha" required><button onclick="registerUser()">Registar</button></div>
-                    <p class="auth-toggle">Já tem uma conta? <a href="#" onclick="toggleAuthForm('login')">Faça login</a></p>
+                    <h2><i class="fas fa-user-plus"></i> <span data-translate-key="registerTitle">Registo</span></h2>
+                    <div class="auth-form">
+                        <input type="email" id="register-email" required data-translate-placeholder="placeholderEmail">
+                        <input type="password" id="register-password" required data-translate-placeholder="placeholderPassword6Chars">
+                        <input type="password" id="register-confirm-password" required data-translate-placeholder="placeholderConfirmPass">
+                        <button onclick="registerUser()"><span data-translate-key="btnRegister">Registar</span></button>
+                    </div>
+                    <p class="auth-toggle"><span data-translate-key="hasAccount">Já tem uma conta?</span> <a href="#" onclick="toggleAuthForm('login')" data-translate-key="loginHere">Faça login</a></p>
                 </div>
                 <div id="forgot-password-form-container" style="display: none;">
-                    <h2><i class="fas fa-key"></i> Recuperar Senha</h2>
-                    <div class="auth-form"><input type="email" id="forgot-password-email" placeholder="Email da sua conta" required><button onclick="sendPasswordResetEmail()">Enviar Email</button></div>
-                    <p class="auth-toggle">Voltar ao <a href="#" onclick="toggleAuthForm('login')">Login</a></p>
+                    <h2><i class="fas fa-key"></i> <span data-translate-key="recoverPassTitle">Recuperar Senha</span></h2>
+                    <div class="auth-form">
+                        <input type="email" id="forgot-password-email" required data-translate-placeholder="placeholderAccountEmail">
+                        <button onclick="sendPasswordResetEmail()"><span data-translate-key="btnSendEmail">Enviar Email</span></button>
+                    </div>
+                    <p class="auth-toggle"><span data-translate-key="backTo">Voltar ao</span> <a href="#" onclick="toggleAuthForm('login')" data-translate-key="loginTitle">Login</a></p>
                 </div>
             </section>
 
             <section id="dashboard-section" class="section">
                 <div class="dashboard-header">
-                    <h2><i class="fas fa-chart-pie"></i> Painel de Controlo</h2>
-                    <div class="dashboard-filters"><div class="btn-group" id="dashboard-period-filter"><button class="active" data-period="today">Hoje</button><button data-period="week">Esta Semana</button><button data-period="month">Este Mês</button><button data-period="all">Sempre</button></div></div>
+                    <h2><i class="fas fa-chart-pie"></i> <span data-translate-key="dashboardTitle">Painel de Controlo</span></h2>
+                    <div class="dashboard-filters">
+                        <div class="btn-group" id="dashboard-period-filter">
+                            <button class="active" data-period="today" data-translate-key="filterToday">Hoje</button>
+                            <button data-period="week" data-translate-key="filterWeek">Esta Semana</button>
+                            <button data-period="month" data-translate-key="filterMonth">Este Mês</button>
+                            <button data-period="all" data-translate-key="filterAllTime">Sempre</button>
+                        </div>
+                    </div>
                 </div>
                 <div class="dashboard-grid">
-                    <div class="stat-card sales"><h3>Total de Vendas</h3><p id="dashboard-total-sales">0.00 MZN</p><i class="stat-icon fas fa-dollar-sign"></i></div>
-                    <div class="stat-card profit"><h3>Lucro Total Estimado</h3><p id="dashboard-total-profit">0.00 MZN</p><i class="stat-icon fas fa-chart-line"></i></div>
-                    <div class="stat-card outflow"><h3>Total de Saídas (Unid.)</h3><p id="dashboard-total-outflow">0</p><i class="stat-icon fas fa-shipping-fast"></i></div>
-                    <div class="stat-card products"><h3>Produtos Registados</h3><p id="dashboard-total-products">0</p><i class="stat-icon fas fa-boxes-stacked"></i></div>
-                    <div class="stat-card low-stock"><h3>Alertas de Stock Baixo</h3><p id="dashboard-low-stock-count">0</p><i class="stat-icon fas fa-exclamation-triangle"></i></div>
+                    <div class="stat-card sales"><h3 data-translate-key="totalSales">Total de Vendas</h3><p id="dashboard-total-sales">0.00 MZN</p><i class="stat-icon fas fa-dollar-sign"></i></div>
+                    <div class="stat-card profit"><h3 data-translate-key="totalProfit">Lucro Total Estimado</h3><p id="dashboard-total-profit">0.00 MZN</p><i class="stat-icon fas fa-chart-line"></i></div>
+                    <div class="stat-card outflow"><h3 data-translate-key="totalOutflow">Total de Saídas (Unid.)</h3><p id="dashboard-total-outflow">0</p><i class="stat-icon fas fa-shipping-fast"></i></div>
+                    <div class="stat-card products"><h3 data-translate-key="registeredProducts">Produtos Registados</h3><p id="dashboard-total-products">0</p><i class="stat-icon fas fa-boxes-stacked"></i></div>
+                    <div class="stat-card low-stock"><h3 data-translate-key="lowStockAlerts">Alertas de Stock Baixo</h3><p id="dashboard-low-stock-count">0</p><i class="stat-icon fas fa-exclamation-triangle"></i></div>
                 </div>
             </section>
             
             <section id="product-management-section" class="section">
-                <h2><span><i class="fas fa-boxes-stacked"></i> Gestão de Produtos</span><button class="btn btn-sm btn-download" onclick="exportProductsToCSV()"><i class="fas fa-download"></i> Download CSV</button></h2>
+                <h2><span><i class="fas fa-boxes-stacked"></i> <span data-translate-key="productManagementTitle">Gestão de Produtos</span></span><button class="btn btn-sm btn-download" onclick="exportProductsToCSV()"><i class="fas fa-download"></i> <span data-translate-key="btnDownloadCSV">Download CSV</span></button></h2>
                 <form id="product-form">
-                    <h3>Adicionar / Editar Produto</h3>
+                    <h3 data-translate-key="addProductTitle">Adicionar / Editar Produto</h3>
                     <div class="form-group">
                         <input type="hidden" id="product-id">
-                        <div class="form-field"><label for="product-name">Nome do Produto</label><input type="text" id="product-name" placeholder="Ex: Peixe Pescada 1kg" required></div>
-                        <div class="form-field"><label for="product-purchase-price">Preço Compra (MZN)</label><input type="number" id="product-purchase-price" placeholder="500.00" step="0.01" required></div>
-                        <div class="form-field"><label for="product-sale-price">Preço Venda (MZN)</label><input type="number" id="product-sale-price" placeholder="650.00" step="0.01" required></div>
-                        <div class="form-field" id="initial-quantity-field"><label for="product-quantity">Quantidade Inicial</label><input type="number" id="product-quantity" placeholder="10" required></div>
-                        <div class="form-field"><button type="submit" id="save-product-btn"><i class="fas fa-plus-circle"></i> Adicionar Produto</button></div>
+                        <div class="form-field"><label for="product-name" data-translate-key="labelProductName">Nome do Produto</label><input type="text" id="product-name" required data-translate-placeholder="placeholderProductName"></div>
+                        <div class="form-field"><label for="product-purchase-price" data-translate-key="labelPurchasePrice">Preço Compra (MZN)</label><input type="number" id="product-purchase-price" placeholder="500.00" step="0.01" required></div>
+                        <div class="form-field"><label for="product-sale-price" data-translate-key="labelSalePrice">Preço Venda (MZN)</label><input type="number" id="product-sale-price" placeholder="650.00" step="0.01" required></div>
+                        <div class="form-field" id="initial-quantity-field"><label for="product-quantity" data-translate-key="labelInitialQty">Quantidade Inicial</label><input type="number" id="product-quantity" placeholder="10" required></div>
+                        <div class="form-field"><button type="submit" id="save-product-btn"><i class="fas fa-plus-circle"></i> <span data-translate-key="btnAddProduct">Adicionar Produto</span></button></div>
                     </div>
                 </form>
-                <h3><i class="fas fa-list-ul"></i> Lista de Produtos</h3>
-                <div class="search-bar"><i class="fas fa-search"></i><input type="text" id="product-search" onkeyup="filterTable('product-list-body', 0)" placeholder="Pesquisar por nome..."></div>
+                <h3><i class="fas fa-list-ul"></i> <span data-translate-key="productListTitle">Lista de Produtos</span></h3>
+                <div class="search-bar"><i class="fas fa-search"></i><input type="text" id="product-search" onkeyup="filterTable('product-list-body', 0)" data-translate-placeholder="placeholderSearchName"></div>
                 <table>
-                    <thead><tr><th class="sortable" onclick="sortTable(this, 0)">Nome <span class="sort-icon"><i class="fas fa-sort"></i></span></th><th class="sortable" onclick="sortTable(this, 1, 'number')">Preço Venda <span class="sort-icon"><i class="fas fa-sort"></i></span></th><th class="sortable" onclick="sortTable(this, 2, 'number')">Stock <span class="sort-icon"><i class="fas fa-sort"></i></span></th><th>Ações</th></tr></thead>
+                    <thead><tr><th class="sortable" onclick="sortTable(this, 0)"><span data-translate-key="tableHeaderName">Nome</span> <span class="sort-icon"><i class="fas fa-sort"></i></span></th><th class="sortable" onclick="sortTable(this, 1, 'number')"><span data-translate-key="tableHeaderSalePrice">Preço Venda</span> <span class="sort-icon"><i class="fas fa-sort"></i></span></th><th class="sortable" onclick="sortTable(this, 2, 'number')"><span data-translate-key="tableHeaderStock">Stock</span> <span class="sort-icon"><i class="fas fa-sort"></i></span></th><th><span data-translate-key="tableHeaderActions">Ações</span></th></tr></thead>
                     <tbody id="product-list-body"></tbody>
                 </table>
             </section>
 
             <section id="stock-management-section" class="section">
-                <h2><i class="fas fa-warehouse"></i> Gestão de Stock</h2>
+                <h2><i class="fas fa-warehouse"></i> <span data-translate-key="stockManagementTitle">Gestão de Stock</span></h2>
                 <form id="stock-entry-form">
-                    <h3>Registar Entrada de Stock (Reposição)</h3>
+                    <h3 data-translate-key="addStockEntryTitle">Registar Entrada de Stock (Reposição)</h3>
                     <div class="form-group">
-                        <div class="form-field"><label for="stock-entry-product-select">Produto</label><select id="stock-entry-product-select" required></select></div>
-                        <div class="form-field"><label for="stock-entry-quantity">Quantidade a Adicionar</label><input type="number" id="stock-entry-quantity" placeholder="Ex: 5" min="1" required></div>
-                        <div class="form-field"><label for="stock-entry-supplier">Fornecedor</label><input type="text" id="stock-entry-supplier" placeholder="Ex: Fornecedor Local"></div>
-                        <div class="form-field"><button type="submit"><i class="fas fa-arrow-alt-circle-down"></i> Registar Entrada</button></div>
+                        <div class="form-field"><label for="stock-entry-product-select" data-translate-key="productLabel">Produto</label><select id="stock-entry-product-select" required></select></div>
+                        <div class="form-field"><label for="stock-entry-quantity" data-translate-key="labelQtyToAdd">Quantidade a Adicionar</label><input type="number" id="stock-entry-quantity" placeholder="Ex: 5" min="1" required></div>
+                        <div class="form-field"><label for="stock-entry-supplier" data-translate-key="labelSupplier">Fornecedor</label><input type="text" id="stock-entry-supplier" data-translate-placeholder="placeholderSupplier"></div>
+                        <div class="form-field"><button type="submit"><i class="fas fa-arrow-alt-circle-down"></i> <span data-translate-key="btnRegisterEntry">Registar Entrada</span></button></div>
                     </div>
                 </form>
             </section>
 
             <section id="sale-registration-section" class="section">
-                <h2><i class="fas fa-cash-register"></i> Registar Venda</h2>
+                <h2><i class="fas fa-cash-register"></i> <span data-translate-key="registerSaleTitle">Registar Venda</span></h2>
                 <form id="sale-form">
                     <div class="form-group">
-                        <div class="form-field"><label for="sale-product-select">Produto</label><select id="sale-product-select" required></select></div>
-                        <div class="form-field"><label for="sale-quantity">Quantidade a Vender</label><input type="number" id="sale-quantity" placeholder="Ex: 1" min="1" required></div>
-                        <div class="form-field"><button type="submit" id="register-sale-btn" disabled><i class="fas fa-shopping-cart"></i> Registar Venda</button></div>
+                        <div class="form-field"><label for="sale-product-select" data-translate-key="productLabel">Produto</label><select id="sale-product-select" required></select></div>
+                        <div class="form-field"><label for="sale-quantity" data-translate-key="labelQtyToSell">Quantidade a Vender</label><input type="number" id="sale-quantity" placeholder="Ex: 1" min="1" required></div>
+                        <div class="form-field"><button type="submit" id="register-sale-btn" disabled><i class="fas fa-shopping-cart"></i> <span data-translate-key="btnRegisterSale">Registar Venda</span></button></div>
                     </div>
                 </form>
             </section>
 
             <section id="profit-report-section" class="section">
-                <h2><span><i class="fas fa-percent"></i> Relatório de Lucratividade por Produto</span><button class="btn btn-sm btn-download" onclick="exportProfitReportToCSV()"><i class="fas fa-download"></i> Download CSV</button></h2>
-                <div class="search-bar"><i class="fas fa-search"></i><input type="text" id="profit-report-search" onkeyup="filterTable('profit-report-table-body', 0)" placeholder="Pesquisar por produto..."></div>
+                <h2><span><i class="fas fa-percent"></i> <span data-translate-key="profitReportTitle">Relatório de Lucratividade por Produto</span></span><button class="btn btn-sm btn-download" onclick="exportProfitReportToCSV()"><i class="fas fa-download"></i> <span data-translate-key="btnDownloadCSV">Download CSV</span></button></h2>
+                <div class="search-bar"><i class="fas fa-search"></i><input type="text" id="profit-report-search" onkeyup="filterTable('profit-report-table-body', 0)" data-translate-placeholder="placeholderSearchProduct"></div>
                 <table>
-                    <thead><tr><th class="sortable" onclick="sortTable(this, 0)">Produto <span class="sort-icon"><i class="fas fa-sort"></i></span></th><th class="sortable" onclick="sortTable(this, 1, 'number')">Unid. Vendidas <span class="sort-icon"><i class="fas fa-sort"></i></span></th><th class="sortable" onclick="sortTable(this, 2, 'number')">Receita Total <span class="sort-icon"><i class="fas fa-sort"></i></span></th><th class="sortable" onclick="sortTable(this, 3, 'number')">Lucro Total <span class="sort-icon"><i class="fas fa-sort"></i></span></th><th class="sortable" onclick="sortTable(this, 4, 'number')">Margem Média <span class="sort-icon"><i class="fas fa-sort"></i></span></th></tr></thead>
+                    <thead><tr><th class="sortable" onclick="sortTable(this, 0)"><span data-translate-key="productLabel">Produto</span> <span class="sort-icon"><i class="fas fa-sort"></i></span></th><th class="sortable" onclick="sortTable(this, 1, 'number')"><span data-translate-key="tableHeaderUnitsSold">Unid. Vendidas</span> <span class="sort-icon"><i class="fas fa-sort"></i></span></th><th class="sortable" onclick="sortTable(this, 2, 'number')"><span data-translate-key="tableHeaderTotalRevenue">Receita Total</span> <span class="sort-icon"><i class="fas fa-sort"></i></span></th><th class="sortable" onclick="sortTable(this, 3, 'number')"><span data-translate-key="tableHeaderTotalProfit">Lucro Total</span> <span class="sort-icon"><i class="fas fa-sort"></i></span></th><th class="sortable" onclick="sortTable(this, 4, 'number')"><span data-translate-key="tableHeaderAvgMargin">Margem Média</span> <span class="sort-icon"><i class="fas fa-sort"></i></span></th></tr></thead>
                     <tbody id="profit-report-table-body"></tbody>
                 </table>
             </section>
 
             <section id="history-section" class="section">
-                 <h2><span><i class="fas fa-history"></i> Histórico de Movimentações</span><button class="btn btn-sm btn-download" onclick="exportHistoryToCSV()"><i class="fas fa-download"></i> Download CSV</button></h2>
-                 <div class="search-bar"><i class="fas fa-search"></i><input type="text" id="history-search" onkeyup="filterTable('movement-history-table-body', 1)" placeholder="Pesquisar por produto..."></div>
-                 <table>
-                    <thead><tr><th class="sortable" onclick="sortTable(this, 0, 'date')">Data/Hora <span class="sort-icon"><i class="fas fa-sort"></i></span></th><th class="sortable" onclick="sortTable(this, 1)">Produto <span class="sort-icon"><i class="fas fa-sort"></i></span></th><th>Tipo</th><th>Qtde</th><th>Total (MZN)</th><th>Lucro / Margem</th><th>Detalhes</th><th>Ação</th></tr></thead>
+                <h2><span><i class="fas fa-history"></i> <span data-translate-key="historyTitle">Histórico de Movimentações</span></span><button class="btn btn-sm btn-download" onclick="exportHistoryToCSV()"><i class="fas fa-download"></i> <span data-translate-key="btnDownloadCSV">Download CSV</span></button></h2>
+                <div class="search-bar"><i class="fas fa-search"></i><input type="text" id="history-search" onkeyup="filterTable('movement-history-table-body', 1)" data-translate-placeholder="placeholderSearchProduct"></div>
+                <table>
+                    <thead><tr><th class="sortable" onclick="sortTable(this, 0, 'date')"><span data-translate-key="tableHeaderDateTime">Data/Hora</span> <span class="sort-icon"><i class="fas fa-sort"></i></span></th><th class="sortable" onclick="sortTable(this, 1)"><span data-translate-key="productLabel">Produto</span> <span class="sort-icon"><i class="fas fa-sort"></i></span></th><th><span data-translate-key="tableHeaderType">Tipo</span></th><th><span data-translate-key="tableHeaderQty">Qtde</span></th><th><span data-translate-key="tableHeaderTotalMZN">Total (MZN)</span></th><th><span data-translate-key="tableHeaderProfitMargin">Lucro / Margem</span></th><th><span data-translate-key="tableHeaderDetails">Detalhes</span></th><th><span data-translate-key="tableHeaderActions">Ação</span></th></tr></thead>
                     <tbody id="movement-history-table-body"></tbody>
-                 </table>
+                </table>
             </section>
         </main>
+
+        <footer>
+            <div class="copyright" data-translate-key="footerRights">
+                &copy; 2025 Gestão de Peixaria Micten. Todos os direitos reservados.
+            </div>
+            <div class="footer-links">
+                <a href="https://wa.me/258865400070" target="_blank" class="whatsapp" title="Contactar no WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                <a href="mailto:nelsonorlandoxerife34@gmail.com" class="email" title="Enviar E-mail"><i class="fas fa-envelope"></i></a>
+            </div>
+        </footer>
     </div>
 
     <script>
+        /* ========================================= */
+        /* MOTOR DE TRADUÇÃO E TEMA         */
+        /* ========================================= */
+        
+        const translations = {
+            pt: {
+                // Navegação e Geral
+                appTitle: "Gestão de Peixaria Micten", navDashboard: "Dashboard", navProducts: "Produtos", navStock: "Stock", navSell: "Vender", navProfitReport: "Relatório de Lucros", navHistory: "Histórico", navLogout: "Sair", btnDownloadCSV: "Download CSV", backTo: "Voltar ao",
+                // Autenticação
+                loginTitle: "Login", placeholderEmail: "Seu Email", placeholderPassword: "Sua Senha", btnLogin: "Entrar", noAccount: "Não tem uma conta?", registerHere: "Registe-se aqui", forgotPasswordLink: "Esqueceu a senha?",
+                registerTitle: "Registo", placeholderPassword6Chars: "Sua Senha (mín. 6 caracteres)", placeholderConfirmPass: "Confirmar Senha", btnRegister: "Registar", hasAccount: "Já tem uma conta?", loginHere: "Faça login",
+                recoverPassTitle: "Recuperar Senha", placeholderAccountEmail: "Email da sua conta", btnSendEmail: "Enviar Email",
+                // Dashboard
+                dashboardTitle: "Painel de Controlo", filterToday: "Hoje", filterWeek: "Esta Semana", filterMonth: "Este Mês", filterAllTime: "Sempre",
+                totalSales: "Total de Vendas", totalProfit: "Lucro Total Estimado", totalOutflow: "Total de Saídas (Unid.)", registeredProducts: "Produtos Registados", lowStockAlerts: "Alertas de Stock Baixo",
+                // Gestão de Produtos
+                productManagementTitle: "Gestão de Produtos", addProductTitle: "Adicionar / Editar Produto", labelProductName: "Nome do Produto", placeholderProductName: "Ex: Peixe Pescada 1kg", labelPurchasePrice: "Preço Compra (MZN)", labelSalePrice: "Preço Venda (MZN)", labelInitialQty: "Quantidade Inicial", btnAddProduct: "Adicionar Produto", btnSaveProduct: "Salvar Alterações",
+                productListTitle: "Lista de Produtos", placeholderSearchName: "Pesquisar por nome...",
+                // Gestão de Stock
+                stockManagementTitle: "Gestão de Stock", addStockEntryTitle: "Registar Entrada de Stock (Reposição)", labelQtyToAdd: "Quantidade a Adicionar", labelSupplier: "Fornecedor", placeholderSupplier: "Ex: Fornecedor Local", btnRegisterEntry: "Registar Entrada",
+                // Vendas
+                registerSaleTitle: "Registar Venda", labelQtyToSell: "Quantidade a Vender", btnRegisterSale: "Registar Venda",
+                // Relatório de Lucros
+                profitReportTitle: "Relatório de Lucratividade por Produto", placeholderSearchProduct: "Pesquisar por produto...",
+                // Histórico
+                historyTitle: "Histórico de Movimentações",
+                // Tabelas
+                tableHeaderName: "Nome", tableHeaderSalePrice: "Preço Venda", tableHeaderStock: "Stock", tableHeaderActions: "Ações", tableHeaderUnitsSold: "Unid. Vendidas", tableHeaderTotalRevenue: "Receita Total", tableHeaderTotalProfit: "Lucro Total", tableHeaderAvgMargin: "Margem Média", tableHeaderDateTime: "Data/Hora", tableHeaderType: "Tipo", tableHeaderQty: "Qtde", tableHeaderTotalMZN: "Total (MZN)", tableHeaderProfitMargin: "Lucro / Margem", tableHeaderDetails: "Detalhes",
+                // Modais e Alertas
+                adjustStockTitle: "Ajustar Stock", productLabel: "Produto", currentStockLabel: "Quantidade Atual", newQuantityLabel: "Nova Quantidade Correta", adjustmentReasonLabel: "Motivo do Ajuste", adjustReasonPlaceholder: "Ex: Correção de contagem, produto danificado...", btnConfirmAdjustment: "Confirmar Ajuste", btnCancel: "Cancelar",
+                confirmDeleteProduct: "Tem a certeza que quer apagar este produto? O seu histórico será mantido, mas o produto será removido da lista.",
+                confirmDeleteMovement: (type, name, qty) => `Tem a CERTEZA que quer apagar este registo do histórico?\n\nTipo: ${type}\nProduto: ${name}\nQuantidade: ${qty}\n\nO stock do produto será corrigido automaticamente.`,
+                // Notificações (Toasts)
+                toastSuccess: "Sucesso", toastError: "Erro", toastProductDeleted: "Produto apagado.", toastSessionEnded: "Sessão encerrada.", toastPasswordsNoMatch: "As senhas não coincidem.", toastRecoveryEmailSent: "Email de recuperação enviado!", toastProductUpdated: "Produto atualizado!", toastProductAdded: "Produto adicionado com sucesso!", toastRequiredName: "O nome do produto é obrigatório.", toastInvalidPrices: "Os preços devem ser números maiores que zero.",
+                toastMovementDeleted: "Registo do histórico apagado e stock corrigido.", toastSaleRegistered: "Venda registada!", toastInvalidSaleProduct: (name) => `O produto "${name}" não tem um preço de venda válido.`, toastInsufficientStock: (qty) => `Stock insuficiente. Apenas ${qty}.`, toastSelectProductAndQty: "Selecione um produto e quantidade.", toastStockEntryRegistered: "Entrada de stock registada!",
+                toastStockAdjusted: "Stock ajustado com sucesso!", toastRequiredReason: "O motivo do ajuste é obrigatório.", toastNoQtyChange: "Nenhuma alteração na quantidade.", toastNoDataToExport: "Nenhum dado para exportar.", toastNoProfitDataToExport: "Nenhum dado de lucro para exportar.",
+                footerRights: "© 2025 Gestão de Peixaria Micten. Todos os direitos reservados.",
+            },
+            en: {
+                appTitle: "Micten Fish Shop Management", navDashboard: "Dashboard", navProducts: "Products", navStock: "Stock", navSell: "Sell", navProfitReport: "Profit Report", navHistory: "History", navLogout: "Logout", btnDownloadCSV: "Download CSV", backTo: "Back to",
+                loginTitle: "Login", placeholderEmail: "Your Email", placeholderPassword: "Your Password", btnLogin: "Sign In", noAccount: "Don't have an account?", registerHere: "Register here", forgotPasswordLink: "Forgot password?",
+                registerTitle: "Register", placeholderPassword6Chars: "Your Password (min. 6 characters)", placeholderConfirmPass: "Confirm Password", btnRegister: "Register", hasAccount: "Already have an account?", loginHere: "Login here",
+                recoverPassTitle: "Recover Password", placeholderAccountEmail: "Your account's email", btnSendEmail: "Send Email",
+                dashboardTitle: "Control Panel", filterToday: "Today", filterWeek: "This Week", filterMonth: "This Month", filterAllTime: "All Time",
+                totalSales: "Total Sales", totalProfit: "Estimated Total Profit", totalOutflow: "Total Outflow (Units)", registeredProducts: "Registered Products", lowStockAlerts: "Low Stock Alerts",
+                productManagementTitle: "Product Management", addProductTitle: "Add / Edit Product", labelProductName: "Product Name", placeholderProductName: "Ex: Hake Fish 1kg", labelPurchasePrice: "Purchase Price (MZN)", labelSalePrice: "Sale Price (MZN)", labelInitialQty: "Initial Quantity", btnAddProduct: "Add Product", btnSaveProduct: "Save Changes",
+                productListTitle: "Product List", placeholderSearchName: "Search by name...",
+                stockManagementTitle: "Stock Management", addStockEntryTitle: "Register Stock Entry (Restock)", labelQtyToAdd: "Quantity to Add", labelSupplier: "Supplier", placeholderSupplier: "Ex: Local Supplier", btnRegisterEntry: "Register Entry",
+                registerSaleTitle: "Register Sale", labelQtyToSell: "Quantity to Sell", btnRegisterSale: "Register Sale",
+                profitReportTitle: "Profitability Report by Product", placeholderSearchProduct: "Search by product...",
+                historyTitle: "Movement History",
+                tableHeaderName: "Name", tableHeaderSalePrice: "Sale Price", tableHeaderStock: "Stock", tableHeaderActions: "Actions", tableHeaderUnitsSold: "Units Sold", tableHeaderTotalRevenue: "Total Revenue", tableHeaderTotalProfit: "Total Profit", tableHeaderAvgMargin: "Avg. Margin", tableHeaderDateTime: "Date/Time", tableHeaderType: "Type", tableHeaderQty: "Qty", tableHeaderTotalMZN: "Total (MZN)", tableHeaderProfitMargin: "Profit / Margin", tableHeaderDetails: "Details",
+                adjustStockTitle: "Adjust Stock", productLabel: "Product", currentStockLabel: "Current Quantity", newQuantityLabel: "New Correct Quantity", adjustmentReasonLabel: "Reason for Adjustment", adjustReasonPlaceholder: "E.g.: Count correction, damaged product...", btnConfirmAdjustment: "Confirm Adjustment", btnCancel: "Cancel",
+                confirmDeleteProduct: "Are you sure you want to delete this product? Its history will be kept, but the product will be removed from the list.",
+                confirmDeleteMovement: (type, name, qty) => `Are you SURE you want to delete this history record?\n\nType: ${type}\nProduct: ${name}\nQuantity: ${qty}\n\nThe product stock will be corrected automatically.`,
+                toastSuccess: "Success", toastError: "Error", toastProductDeleted: "Product deleted.", toastSessionEnded: "Session ended.", toastPasswordsNoMatch: "Passwords do not match.", toastRecoveryEmailSent: "Recovery email sent!", toastProductUpdated: "Product updated!", toastProductAdded: "Product added successfully!", toastRequiredName: "Product name is required.", toastInvalidPrices: "Prices must be numbers greater than zero.",
+                toastMovementDeleted: "History record deleted and stock corrected.", toastSaleRegistered: "Sale registered!", toastInvalidSaleProduct: (name) => `Product "${name}" does not have a valid sale price.`, toastInsufficientStock: (qty) => `Insufficient stock. Only ${qty} available.`, toastSelectProductAndQty: "Select a product and quantity.", toastStockEntryRegistered: "Stock entry registered!",
+                toastStockAdjusted: "Stock adjusted successfully!", toastRequiredReason: "Reason for adjustment is required.", toastNoQtyChange: "No change in quantity.", toastNoDataToExport: "No data to export.", toastNoProfitDataToExport: "No profit data to export.",
+                footerRights: "© 2025 Micten Fish Shop Management. All rights reserved.",
+            },
+            ny: {
+                appTitle: "Kuwongolera kwa Sitolo ya Nsomba ya Micten", navDashboard: "Dashboard", navProducts: "Zogulitsa", navStock: "Zosungira", navSell: "Gulitsani", navProfitReport: "Lipoti la Phindu", navHistory: "Mbiri", navLogout: "Tulukani", btnDownloadCSV: "Tsitsani CSV", backTo: "Bwererani ku",
+                loginTitle: "Lowani", placeholderEmail: "Imelo yanu", placeholderPassword: "Mawu achinsinsi anu", btnLogin: "Lowani", noAccount: "Mulibe akaunti?", registerHere: "Lembetsani apa", forgotPasswordLink: "Mwayiwala mawu achinsinsi?",
+                registerTitle: "Lembetsani", placeholderPassword6Chars: "Mawu achinsinsi (osachepera 6)", placeholderConfirmPass: "Tsimikizani Mawu Achinsinsi", btnRegister: "Lembetsani", hasAccount: "Muli kale ndi akaunti?", loginHere: "Lowani apa",
+                recoverPassTitle: "Bwezerani Mawu Achinsinsi", placeholderAccountEmail: "Imelo ya akaunti yanu", btnSendEmail: "Tumizani Imelo",
+                dashboardTitle: "Gulu Lowongolera", filterToday: "Lero", filterWeek: "Sabata Ino", filterMonth: "Mwezi Uno", filterAllTime: "Nthawi Zonse",
+                totalSales: "Zogulitsa Zonse", totalProfit: "Phindu Lonse Loyerekeza", totalOutflow: "Zotuluka Zonse (Zigawo)", registeredProducts: "Zogulitsa Zolembetsedwa", lowStockAlerts: "Machenjezo a Zosungira Zochepa",
+                productManagementTitle: "Kuwongolera Zogulitsa", addProductTitle: "Onjezani / Sinthani Zogulitsa", labelProductName: "Dzina la Chogulitsa", placeholderProductName: "Mwachitsanzo: Nsomba ya Chambo 1kg", labelPurchasePrice: "Mtengo Wogulira (MZN)", labelSalePrice: "Mtengo Wogulitsa (MZN)", labelInitialQty: "Kuchuluka Koyamba", btnAddProduct: "Onjezani Chogulitsa", btnSaveProduct: "Sungani Zosintha",
+                productListTitle: "Mndandanda Wazogulitsa", placeholderSearchName: "Fufuzani ndi dzina...",
+                stockManagementTitle: "Kuwongolera Zosungira", addStockEntryTitle: "Lembani Kulowa kwa Zosungira", labelQtyToAdd: "Kuchuluka Koti Muwonjezere", labelSupplier: "Wopereka", placeholderSupplier: "Mwachitsanzo: Wopereka wakomweko", btnRegisterEntry: "Lembani Kulowa",
+                registerSaleTitle: "Lembani Zogulitsa", labelQtyToSell: "Kuchuluka Koti Mugulitse", btnRegisterSale: "Lembani Zogulitsa",
+                profitReportTitle: "Lipoti la Phindu pa Chogulitsa", placeholderSearchProduct: "Fufuzani chogulitsa...",
+                historyTitle: "Mbiri Yakusuntha",
+                tableHeaderName: "Dzina", tableHeaderSalePrice: "Mtengo Wogulitsa", tableHeaderStock: "Zosungira", tableHeaderActions: "Zochita", tableHeaderUnitsSold: "Zigawo Zogulitsidwa", tableHeaderTotalRevenue: "Ndalama Zonse", tableHeaderTotalProfit: "Phindu Lonse", tableHeaderAvgMargin: "Maperesenti Avereji", tableHeaderDateTime: "Tsiku/Nthawi", tableHeaderType: "Mtundu", tableHeaderQty: "Kuchuluka", tableHeaderTotalMZN: "Zonse (MZN)", tableHeaderProfitMargin: "Phindu / Maperesenti", tableHeaderDetails: "Zambiri",
+                adjustStockTitle: "Sinthani Zosungira", productLabel: "Zogulitsa", currentStockLabel: "Zomwe Zilipo", newQuantityLabel: "Kuchuluka Kwatsopano Kolondola", adjustmentReasonLabel: "Chifukwa Chosinthira", adjustReasonPlaceholder: "Mwachitsanzo: Kuwongolera powerenga, zowonongeka...", btnConfirmAdjustment: "Tsimikizani Kusintha", btnCancel: "Letsani",
+                confirmDeleteProduct: "Mukutsimikiza kuti mukufuna kuchotsa mankhwalawa? Mbiri yake idzasungidwa, koma mankhwalawa adzachotsedwa pamndandanda.",
+                confirmDeleteMovement: (type, name, qty) => `MUKUTIMIKIRADI kuti mukufuna kuchotsa mbiriyi?\n\nMtundu: ${type}\nZogulitsa: ${name}\nKuchuluka: ${qty}\n\nZosungira za mankhwalawa zidzakonzedwa zokha.`,
+                toastSuccess: "Zapambana", toastError: "Zalephera", toastProductDeleted: "Zogulitsa zachotsedwa.", toastSessionEnded: "Gawo latha.", toastPasswordsNoMatch: "Mawu achinsinsi sakufanana.", toastRecoveryEmailSent: "Imelo yobwezeretsa yatumizidwa!", toastProductUpdated: "Zogulitsa zasinthidwa!", toastProductAdded: "Zogulitsa zawonjezedwa bwino!", toastRequiredName: "Dzina la zogulitsa ndilofunika.", toastInvalidPrices: "Mitengo iyenera kukhala manambala opitilira zero.",
+                toastMovementDeleted: "Mbiri yachotsedwa ndipo zosungira zakonzedwa.", toastSaleRegistered: "Zogulitsa zalembedwa!", toastInvalidSaleProduct: (name) => `Zogulitsa "${name}" zilibe mtengo wogulitsira wovomerezeka.`, toastInsufficientStock: (qty) => `Zosungira zosakwanira. Kungotsala ${qty}.`, toastSelectProductAndQty: "Sankhani chogulitsa ndi kuchuluka kwake.", toastStockEntryRegistered: "Kulowa kwa zosungira kwalembedwa!",
+                toastStockAdjusted: "Zosungira zasinthidwa bwino!", toastRequiredReason: "Chifukwa chosinthira ndichofunika.", toastNoQtyChange: "Palibe kusintha pa kuchuluka.", toastNoDataToExport: "Palibe deta yoti mutumize kunja.", toastNoProfitDataToExport: "Palibe deta ya phindu yoti mutumize kunja.",
+                footerRights: "© 2025 Kuwongolera kwa Sitolo ya Nsomba ya Micten. Ufulu wonse ndi wotetezedwa.",
+            }
+        };
+
+        let currentLang = 'pt';
+
+        function setLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('language', lang);
+            document.documentElement.lang = lang.split('-')[0];
+            
+            document.querySelectorAll('[data-translate-key]').forEach(elem => {
+                const key = elem.getAttribute('data-translate-key');
+                const translation = translations[lang][key];
+                if (translation && typeof translation === 'string') {
+                    // Para evitar apagar ícones dentro de botões, etc.
+                    const icon = elem.querySelector('i');
+                    if (icon) {
+                        elem.innerHTML = ''; // Limpa o conteúdo
+                        elem.appendChild(icon); // Adiciona o ícone de volta
+                        elem.appendChild(document.createTextNode(" " + translation)); // Adiciona o texto traduzido
+                    } else {
+                        elem.innerText = translation;
+                    }
+                }
+            });
+            document.querySelectorAll('[data-translate-placeholder]').forEach(elem => {
+                const key = elem.getAttribute('data-translate-placeholder');
+                 if (translations[lang][key]) {
+                    elem.placeholder = translations[lang][key];
+                }
+            });
+             // Atualiza o texto do botão de salvar produto, que muda dinamicamente
+            const saveBtn = document.getElementById('save-product-btn').querySelector('span');
+            if(saveBtn){
+                const isEditing = !!document.getElementById('product-id').value;
+                saveBtn.innerText = isEditing ? translations[currentLang].btnSaveProduct : translations[currentLang].btnAddProduct;
+            }
+        }
+        
+        function setTheme(theme) {
+            document.body.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            const themeIcon = document.querySelector('#theme-toggle i');
+            themeIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+        }
+
+        function toggleTheme() {
+            const currentTheme = document.body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            setTheme(newTheme);
+        }
+
         const firebaseConfig = { apiKey: "AIzaSyA1Fefo19PT7dap3J0z4ohE2BVhub7U9N4", authDomain: "mercearia-e1e8e.firebaseapp.com", projectId: "mercearia-e1e8e", storageBucket: "mercearia-e1e8e.appspot.com", messagingSenderId: "211104638560", appId: "1:211104638560:web:0f2cd09b00e5f572bb0505" };
         firebase.initializeApp(firebaseConfig);
         const auth = firebase.auth();
@@ -231,10 +529,17 @@
         function hideLoading() { document.getElementById('loading-overlay').classList.remove('visible'); }
         
         function showToast(message, type = 'success') {
-            const container = document.getElementById('toast-container'); const toast = document.createElement('div'); toast.className = `toast ${type}`;
-            const icon = type === 'success' ? 'fa-check-circle' : 'fa-times-circle'; toast.innerHTML = `<i class="fas ${icon}"></i> ${message}`;
-            container.appendChild(toast); setTimeout(() => toast.classList.add('show'), 10);
-            setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 500); }, 4000);
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            const iconClass = type === 'success' ? 'fa-check-circle' : 'fa-times-circle';
+            toast.innerHTML = `<i class="fas ${iconClass}"></i> ${message}`;
+            container.appendChild(toast);
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => {
+                toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 500);
+            }, 4000);
         }
 
         function toggleAuthForm(formType) {
@@ -246,11 +551,20 @@
         auth.onAuthStateChanged(user => {
             const allSections = document.querySelectorAll('.section');
             if (user) {
-                document.getElementById('auth-section').classList.remove('active'); document.getElementById('main-navbar').style.display = 'flex'; showSection('dashboard-section'); listenToData();
+                document.getElementById('auth-section').classList.remove('active');
+                document.getElementById('main-navbar').style.display = 'flex';
+                showSection('dashboard-section');
+                listenToData();
             } else {
-                if (productsListener) productsListener(); if (movementsListener) movementsListener(); products = []; movements = [];
-                document.getElementById('main-navbar').style.display = 'none'; allSections.forEach(s => s.classList.remove('active'));
-                document.getElementById('auth-section').classList.add('active'); toggleAuthForm('login'); hideLoading();
+                if (productsListener) productsListener();
+                if (movementsListener) movementsListener();
+                products = [];
+                movements = [];
+                document.getElementById('main-navbar').style.display = 'none';
+                allSections.forEach(s => s.classList.remove('active'));
+                document.getElementById('auth-section').classList.add('active');
+                toggleAuthForm('login');
+                hideLoading();
             }
         });
         
@@ -260,21 +574,41 @@
             document.querySelectorAll('.nav-button').forEach(btn => btn.classList.toggle('active', btn.dataset.section === sectionId));
         }
         
-        function handleError(error, context = "Operação") { console.error(`${context} falhou:`, error); showToast(`Erro em ${context}: ${error.message}`, 'error'); hideLoading(); }
+        function handleError(error, context = "Operação") {
+            console.error(`${context} failed:`, error);
+            showToast(`${translations[currentLang].toastError} em ${context}: ${error.message}`, 'error');
+            hideLoading();
+        }
 
         function listenToData() {
             showLoading();
             if (productsListener) productsListener();
-            productsListener = db.collection('products').orderBy('name').onSnapshot(snapshot => { products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderAllUI(); }, e => handleError(e, "Leitura de Produtos"));
+            productsListener = db.collection('products').orderBy('name').onSnapshot(snapshot => {
+                products = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderAllUI();
+            }, e => handleError(e, "Leitura de Produtos"));
+
             if (movementsListener) movementsListener();
-            movementsListener = db.collection('movements').orderBy('timestamp', 'desc').onSnapshot(snapshot => { movements = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() })); renderAllUI(); }, e => handleError(e, "Leitura do Histórico"));
+            movementsListener = db.collection('movements').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
+                movements = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderAllUI();
+            }, e => handleError(e, "Leitura do Histórico"));
         }
         
-        function renderAllUI() { renderProducts(); updateProductSelects(); renderMovementHistory(); renderProfitReport(); const activeFilter = document.querySelector('#dashboard-period-filter button.active')?.dataset.period || 'today'; calculateDashboardStats(activeFilter); hideLoading(); }
+        function renderAllUI() {
+            renderProducts();
+            updateProductSelects();
+            renderMovementHistory();
+            renderProfitReport();
+            const activeFilter = document.querySelector('#dashboard-period-filter button.active')?.dataset.period || 'today';
+            calculateDashboardStats(activeFilter);
+            hideLoading();
+        }
         
         function calculateDashboardStats(period = 'today') {
             let totalSales = 0, totalProfit = 0, totalOutflow = 0, lowStockCount = 0;
-            const now = new Date(); let startDate = new Date(0);
+            const now = new Date();
+            let startDate = new Date(0);
             if (period === 'today') { startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate()); }
             if (period === 'week') { const dayOfWeek = now.getDay() === 0 ? 6 : now.getDay() - 1; startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate() - dayOfWeek); }
             if (period === 'month') { startDate = new Date(now.getFullYear(), now.getMonth(), 1); }
@@ -298,7 +632,8 @@
             const tableBody = document.getElementById('product-list-body'); tableBody.innerHTML = '';
             products.forEach(p => {
                 const row = tableBody.insertRow(); row.id = `product-row-${p.id}`;
-                row.innerHTML = `<td>${p.name}</td><td>${p.salePrice.toFixed(2)}</td><td>${p.quantity}</td>
+                const stockClass = p.quantity <= STOCK_LOW_THRESHOLD ? 'stock-low' : '';
+                row.innerHTML = `<td>${p.name}</td><td>${p.salePrice.toFixed(2)}</td><td class="${stockClass}">${p.quantity}</td>
                     <td class="action-cell">
                         <button class="edit-btn btn-sm" onclick="editProduct('${p.id}')" title="Editar Produto"><i class="fas fa-edit"></i></button>
                         <button class="adjust-btn btn-sm" onclick="openAdjustmentModal('${p.id}')" title="Ajustar Stock"><i class="fas fa-exchange-alt"></i></button>
@@ -308,12 +643,16 @@
         }
         
         function updateProductSelects() {
-            const saleSelect = document.getElementById('sale-product-select'), stockSelect = document.getElementById('stock-entry-product-select');
-            saleSelect.innerHTML = '<option value="">Selecione um produto</option>'; stockSelect.innerHTML = '<option value="">Selecione um produto</option>';
+            const saleSelect = document.getElementById('sale-product-select');
+            const stockSelect = document.getElementById('stock-entry-product-select');
+            const defaultOptionText = translations[currentLang].productLabel || "Selecione um produto";
+            saleSelect.innerHTML = `<option value="">${defaultOptionText}</option>`;
+            stockSelect.innerHTML = `<option value="">${defaultOptionText}</option>`;
             products.forEach(p => {
                 const saleOption = new Option(`${p.name} (Stock: ${p.quantity})`, p.id);
                 if (p.quantity <= 0) saleOption.disabled = true;
-                saleSelect.add(saleOption); stockSelect.add(new Option(p.name, p.id));
+                saleSelect.add(saleOption);
+                stockSelect.add(new Option(p.name, p.id));
             });
         }
 
@@ -323,11 +662,11 @@
                 const row = tableBody.insertRow(); let profitCellHTML = '<td>-</td>';
                 if (mov.type === 'saida (venda)') {
                     const profit = mov.totalProfit || 0; const sale = mov.totalSale || 0; const margin = sale > 0 ? (profit / sale) * 100 : 0;
-                    const profitColor = profit >= 0 ? 'var(--profit-color)' : 'var(--danger-color)';
+                    const profitColor = profit >= 0 ? 'var(--accent-color-2)' : 'var(--accent-color-3)';
                     profitCellHTML = `<td style="color: ${profitColor}; font-weight: bold;">${profit.toFixed(2)} (${margin.toFixed(1)}%)</td>`;
                 }
                 const total = mov.type.includes('entrada') ? mov.totalCost : mov.totalSale;
-                row.innerHTML = `<td data-sort-value="${mov.timestamp ? mov.timestamp.toMillis() : 0}">${mov.timestamp ? new Date(mov.timestamp.toDate()).toLocaleString('pt-MZ') : ''}</td>
+                row.innerHTML = `<td data-sort-value="${mov.timestamp ? mov.timestamp.toMillis() : 0}">${mov.timestamp ? new Date(mov.timestamp.toDate()).toLocaleString(currentLang) : ''}</td>
                     <td>${mov.productName}</td><td>${mov.type}</td><td>${mov.quantity}</td><td>${(total || 0).toFixed(2)}</td>${profitCellHTML}<td>${mov.details || ''}</td>
                     <td class="action-cell"><button class="delete-btn btn-sm" onclick="deleteMovement('${mov.id}')" title="Apagar este registo"><i class="fas fa-trash"></i></button></td>`;
             });
@@ -338,21 +677,23 @@
             movements.forEach(mov => {
                 if(mov.type !== 'saida (venda)') return;
                 if(!reportData[mov.productId]) { reportData[mov.productId] = { name: mov.productName, units: 0, revenue: 0, profit: 0 }; }
-                reportData[mov.productId].units += mov.quantity; reportData[mov.productId].revenue += mov.totalSale; reportData[mov.productId].profit += mov.totalProfit;
+                reportData[mov.productId].units += mov.quantity;
+                reportData[mov.productId].revenue += mov.totalSale;
+                reportData[mov.productId].profit += mov.totalProfit;
             });
             const reportArray = Object.values(reportData).sort((a,b) => b.profit - a.profit);
             const tableBody = document.getElementById('profit-report-table-body'); tableBody.innerHTML = '';
             reportArray.forEach(item => {
                 const margin = item.revenue > 0 ? (item.profit / item.revenue) * 100 : 0;
                 const row = tableBody.insertRow();
-                row.innerHTML = `<td>${item.name}</td><td>${item.units}</td><td>${item.revenue.toFixed(2)}</td><td style="color:var(--profit-color);font-weight:bold;">${item.profit.toFixed(2)}</td><td>${margin.toFixed(1)}%</td>`;
+                row.innerHTML = `<td>${item.name}</td><td>${item.units}</td><td>${item.revenue.toFixed(2)}</td><td style="color:var(--accent-color-2);font-weight:bold;">${item.profit.toFixed(2)}</td><td>${margin.toFixed(1)}%</td>`;
             });
         }
 
         async function loginUser() { try { await auth.signInWithEmailAndPassword(document.getElementById('login-email').value, document.getElementById('login-password').value); } catch(e) { handleError(e, 'Login'); } }
-        async function registerUser() { const pass = document.getElementById('register-password').value; if (pass !== document.getElementById('register-confirm-password').value) { showToast('As senhas não coincidem.', 'error'); return; } try { await auth.createUserWithEmailAndPassword(document.getElementById('register-email').value, pass); } catch (e) { handleError(e, 'Registo'); } }
-        async function logoutUser() { await auth.signOut(); showToast('Sessão encerrada.', 'success'); }
-        async function sendPasswordResetEmail() { try { await auth.sendPasswordResetEmail(document.getElementById('forgot-password-email').value); showToast('Email de recuperação enviado!', 'success'); } catch(e) { handleError(e, 'Recuperação de Senha'); } }
+        async function registerUser() { const pass = document.getElementById('register-password').value; if (pass !== document.getElementById('register-confirm-password').value) { showToast(translations[currentLang].toastPasswordsNoMatch, 'error'); return; } try { await auth.createUserWithEmailAndPassword(document.getElementById('register-email').value, pass); } catch (e) { handleError(e, 'Registo'); } }
+        async function logoutUser() { await auth.signOut(); showToast(translations[currentLang].toastSessionEnded, 'success'); }
+        async function sendPasswordResetEmail() { try { await auth.sendPasswordResetEmail(document.getElementById('forgot-password-email').value); showToast(translations[currentLang].toastRecoveryEmailSent, 'success'); } catch(e) { handleError(e, 'Recuperação de Senha'); } }
 
         document.getElementById('product-form').addEventListener('submit', e => { e.preventDefault(); saveProduct(); });
         async function saveProduct() {
@@ -360,35 +701,67 @@
             const name = document.getElementById('product-name').value.trim();
             const purchasePrice = parseFloat(document.getElementById('product-purchase-price').value);
             const salePrice = parseFloat(document.getElementById('product-sale-price').value);
-            if (!name) { showToast('O nome do produto é obrigatório.', 'error'); return; }
-            if (isNaN(purchasePrice) || isNaN(salePrice) || purchasePrice <= 0 || salePrice <= 0) { showToast('Os preços devem ser números maiores que zero.', 'error'); return; }
-
+            if (!name) { showToast(translations[currentLang].toastRequiredName, 'error'); return; }
+            if (isNaN(purchasePrice) || isNaN(salePrice) || purchasePrice <= 0 || salePrice <= 0) { showToast(translations[currentLang].toastInvalidPrices, 'error'); return; }
             const productData = { name, purchasePrice, salePrice };
             showLoading();
             try {
-                if (isEditing) { await db.collection('products').doc(id).update(productData); showToast('Produto atualizado!', 'success'); } 
-                else { const quantity = parseInt(document.getElementById('product-quantity').value) || 0; const newProdRef = await db.collection('products').add({ ...productData, quantity }); if (quantity > 0) { const initialMovement = { productId: newProdRef.id, productName: name, type: 'entrada (inicial)', quantity, totalCost: productData.purchasePrice * quantity, details: 'Stock inicial do registo', timestamp: firebase.firestore.FieldValue.serverTimestamp() }; await db.collection('movements').add(initialMovement); } showToast('Produto adicionado com sucesso!', 'success'); }
+                if (isEditing) {
+                    await db.collection('products').doc(id).update(productData);
+                    showToast(translations[currentLang].toastProductUpdated, 'success');
+                } else {
+                    const quantity = parseInt(document.getElementById('product-quantity').value) || 0;
+                    const newProdRef = await db.collection('products').add({ ...productData, quantity });
+                    if (quantity > 0) {
+                        const initialMovement = { productId: newProdRef.id, productName: name, type: 'entrada (inicial)', quantity, totalCost: productData.purchasePrice * quantity, details: 'Stock inicial do registo', timestamp: firebase.firestore.FieldValue.serverTimestamp() };
+                        await db.collection('movements').add(initialMovement);
+                    }
+                    showToast(translations[currentLang].toastProductAdded, 'success');
+                }
                 clearProductForm();
-            } catch (e) { handleError(e, "Salvar Produto"); }
+            } catch (e) { handleError(e, "Salvar Produto"); } finally { hideLoading(); }
         }
         
-        function clearProductForm() { document.getElementById('product-form').reset(); document.getElementById('product-id').value = ''; document.getElementById('initial-quantity-field').style.display = 'flex'; document.getElementById('product-quantity').required = true; document.getElementById('save-product-btn').innerHTML = '<i class="fas fa-plus-circle"></i> Adicionar Produto'; }
-        function editProduct(id) { const p = products.find(prod => prod.id === id); if (!p) return; document.getElementById('product-id').value = p.id; document.getElementById('product-name').value = p.name; document.getElementById('product-purchase-price').value = p.purchasePrice; document.getElementById('product-sale-price').value = p.salePrice; document.getElementById('initial-quantity-field').style.display = 'none'; document.getElementById('product-quantity').required = false; document.getElementById('save-product-btn').innerHTML = '<i class="fas fa-save"></i> Salvar Alterações'; showSection('product-management-section'); window.scrollTo(0,0); }
-        async function deleteProduct(id) { if (!confirm("Tem a certeza que quer apagar este produto? O seu histórico será mantido, mas o produto será removido da lista.")) return; showLoading(); try { await db.collection('products').doc(id).delete(); showToast('Produto apagado.', 'success'); } catch (e) { handleError(e, "Apagar Produto"); } }
+        function clearProductForm() {
+            document.getElementById('product-form').reset();
+            document.getElementById('product-id').value = '';
+            document.getElementById('initial-quantity-field').style.display = 'flex';
+            document.getElementById('product-quantity').required = true;
+            const saveBtnSpan = document.getElementById('save-product-btn').querySelector('span');
+            saveBtnSpan.innerText = translations[currentLang].btnAddProduct;
+        }
+
+        function editProduct(id) {
+            const p = products.find(prod => prod.id === id); if (!p) return;
+            document.getElementById('product-id').value = p.id;
+            document.getElementById('product-name').value = p.name;
+            document.getElementById('product-purchase-price').value = p.purchasePrice;
+            document.getElementById('product-sale-price').value = p.salePrice;
+            document.getElementById('initial-quantity-field').style.display = 'none';
+            document.getElementById('product-quantity').required = false;
+            document.getElementById('save-product-btn').querySelector('span').innerText = translations[currentLang].btnSaveProduct;
+            showSection('product-management-section');
+            window.scrollTo(0,0);
+        }
+
+        async function deleteProduct(id) {
+            if (!confirm(translations[currentLang].confirmDeleteProduct)) return;
+            showLoading();
+            try {
+                await db.collection('products').doc(id).delete();
+                showToast(translations[currentLang].toastProductDeleted, 'success');
+            } catch (e) { handleError(e, "Apagar Produto"); } finally { hideLoading(); }
+        }
 
         async function deleteMovement(movementId) {
             const movement = movements.find(m => m.id === movementId);
             if (!movement) { showToast('Registo não encontrado.', 'error'); return; }
-            if (!confirm(`Tem a CERTEZA que quer apagar este registo do histórico?\n\nTipo: ${movement.type}\nProduto: ${movement.productName}\nQuantidade: ${movement.quantity}\n\nO stock do produto será corrigido automaticamente.`)) return;
-
+            const confirmationText = translations[currentLang].confirmDeleteMovement(movement.type, movement.productName, movement.quantity);
+            if (!confirm(confirmationText)) return;
             showLoading();
-            let quantityToRevert = 0;
-            if (movement.type.includes('saida') || (movement.type === 'ajuste' && movement.quantity < 0)) { quantityToRevert = movement.quantity; } 
-            else { quantityToRevert = -movement.quantity; }
-            
+            let quantityToRevert = (movement.type.includes('saida') || (movement.type === 'ajuste' && movement.quantity < 0)) ? movement.quantity : -movement.quantity;
             const productRef = db.collection('products').doc(movement.productId);
             const movementRef = db.collection('movements').doc(movementId);
-
             try {
                 await db.runTransaction(async (transaction) => {
                     const productDoc = await transaction.get(productRef);
@@ -397,34 +770,103 @@
                     }
                     transaction.delete(movementRef);
                 });
-                showToast('Registo do histórico apagado e stock corrigido.', 'success');
+                showToast(translations[currentLang].toastMovementDeleted, 'success');
             } catch (e) { handleError(e, "Apagar Registo de Histórico"); } finally { hideLoading(); }
         }
 
         document.getElementById('sale-form').addEventListener('submit', e => { e.preventDefault(); registerSale(); });
         async function registerSale() {
-            const productId = document.getElementById('sale-product-select').value, quantity = parseInt(document.getElementById('sale-quantity').value);
-            if (!productId || !quantity || quantity <= 0) { showToast('Selecione um produto e quantidade.', 'error'); return; }
+            const productId = document.getElementById('sale-product-select').value;
+            const quantity = parseInt(document.getElementById('sale-quantity').value);
+            if (!productId || !quantity || quantity <= 0) { showToast(translations[currentLang].toastSelectProductAndQty, 'error'); return; }
             const product = products.find(p => p.id === productId);
-            if (!product.salePrice || product.salePrice <= 0) { showToast(`O produto "${product.name}" não tem um preço de venda válido.`, 'error'); return; }
-            if (product.quantity < quantity) { showToast(`Stock insuficiente. Apenas ${product.quantity}.`, 'error'); return; }
+            if (!product.salePrice || product.salePrice <= 0) { showToast(translations[currentLang].toastInvalidSaleProduct(product.name), 'error'); return; }
+            if (product.quantity < quantity) { showToast(translations[currentLang].toastInsufficientStock(product.quantity), 'error'); return; }
             showLoading();
             const productRef = db.collection('products').doc(productId);
             const saleData = { productId, productName: product.name, type: 'saida (venda)', quantity, salePrice: product.salePrice, purchasePrice: product.purchasePrice, totalSale: product.salePrice * quantity, totalProfit: (product.salePrice - product.purchasePrice) * quantity, timestamp: firebase.firestore.FieldValue.serverTimestamp(), details: 'Venda registada' };
-            try { await productRef.update({ quantity: firebase.firestore.FieldValue.increment(-quantity) }); await db.collection('movements').add(saleData); showToast('Venda registada!', 'success'); document.getElementById('sale-form').reset(); } catch (e) { handleError(e, "Registar Venda"); }
+            try {
+                await productRef.update({ quantity: firebase.firestore.FieldValue.increment(-quantity) });
+                await db.collection('movements').add(saleData);
+                showToast(translations[currentLang].toastSaleRegistered, 'success');
+                document.getElementById('sale-form').reset();
+            } catch (e) { handleError(e, "Registar Venda"); } finally { hideLoading(); }
         }
         document.getElementById('sale-product-select').addEventListener('change', function() { document.getElementById('register-sale-btn').disabled = !this.value; });
         
-        document.getElementById('stock-entry-form').addEventListener('submit', async e => { e.preventDefault(); const productId = document.getElementById('stock-entry-product-select').value, quantity = parseInt(document.getElementById('stock-entry-quantity').value); if (!productId || !quantity || quantity <= 0) return; const product = products.find(p => p.id === productId); const movement = { productId, productName: product.name, type: 'entrada (reposição)', quantity, totalCost: product.purchasePrice * quantity, details: document.getElementById('stock-entry-supplier').value, timestamp: firebase.firestore.FieldValue.serverTimestamp() }; showLoading(); try { await db.collection('products').doc(productId).update({ quantity: firebase.firestore.FieldValue.increment(quantity) }); await db.collection('movements').add(movement); showToast('Entrada de stock registada!', 'success'); document.getElementById('stock-entry-form').reset(); } catch(err) { handleError(err, 'Entrada de Stock'); } });
+        document.getElementById('stock-entry-form').addEventListener('submit', async e => {
+            e.preventDefault();
+            const productId = document.getElementById('stock-entry-product-select').value;
+            const quantity = parseInt(document.getElementById('stock-entry-quantity').value);
+            if (!productId || !quantity || quantity <= 0) return;
+            const product = products.find(p => p.id === productId);
+            const movement = { productId, productName: product.name, type: 'entrada (reposição)', quantity, totalCost: product.purchasePrice * quantity, details: document.getElementById('stock-entry-supplier').value, timestamp: firebase.firestore.FieldValue.serverTimestamp() };
+            showLoading();
+            try {
+                await db.collection('products').doc(productId).update({ quantity: firebase.firestore.FieldValue.increment(quantity) });
+                await db.collection('movements').add(movement);
+                showToast(translations[currentLang].toastStockEntryRegistered, 'success');
+                document.getElementById('stock-entry-form').reset();
+            } catch(err) { handleError(err, 'Entrada de Stock'); } finally { hideLoading(); }
+        });
 
-        function openAdjustmentModal(productId) { const p = products.find(prod => prod.id === productId); if(!p) return; document.getElementById('adjustment-product-id').value = productId; document.getElementById('adjustment-product-name').textContent = p.name; document.getElementById('adjustment-current-stock').textContent = p.quantity; document.getElementById('adjustment-new-quantity').value = p.quantity; document.getElementById('stock-adjustment-modal').classList.add('visible'); }
+        function openAdjustmentModal(productId) {
+            const p = products.find(prod => prod.id === productId); if(!p) return;
+            document.getElementById('adjustment-product-id').value = productId;
+            document.getElementById('adjustment-product-name').textContent = p.name;
+            document.getElementById('adjustment-current-stock').textContent = p.quantity;
+            document.getElementById('adjustment-new-quantity').value = p.quantity;
+            document.getElementById('stock-adjustment-modal').classList.add('visible');
+        }
         document.getElementById('cancel-adjustment-btn').addEventListener('click', () => document.getElementById('stock-adjustment-modal').classList.remove('visible'));
-        document.getElementById('stock-adjustment-form').addEventListener('submit', async e => { e.preventDefault(); const productId = document.getElementById('adjustment-product-id').value; const newQuantity = parseInt(document.getElementById('adjustment-new-quantity').value); const reason = document.getElementById('adjustment-reason').value.trim(); if (reason === '') { showToast('O motivo do ajuste é obrigatório.', 'error'); return; } const product = products.find(p => p.id === productId); const adjustment = newQuantity - product.quantity; if(adjustment === 0) { showToast('Nenhuma alteração na quantidade.', 'error'); return; } const movement = { productId, productName: product.name, type: `ajuste`, quantity: adjustment, details: reason, timestamp: firebase.firestore.FieldValue.serverTimestamp() }; showLoading(); try { await db.collection('products').doc(productId).update({ quantity: newQuantity }); await db.collection('movements').add(movement); showToast('Stock ajustado com sucesso!', 'success'); document.getElementById('stock-adjustment-modal').classList.remove('visible'); } catch(err) { handleError(err, 'Ajuste de Stock'); } });
+        document.getElementById('stock-adjustment-form').addEventListener('submit', async e => {
+            e.preventDefault();
+            const productId = document.getElementById('adjustment-product-id').value;
+            const newQuantity = parseInt(document.getElementById('adjustment-new-quantity').value);
+            const reason = document.getElementById('adjustment-reason').value.trim();
+            if (reason === '') { showToast(translations[currentLang].toastRequiredReason, 'error'); return; }
+            const product = products.find(p => p.id === productId);
+            const adjustment = newQuantity - product.quantity;
+            if(adjustment === 0) { showToast(translations[currentLang].toastNoQtyChange, 'error'); return; }
+            const movement = { productId, productName: product.name, type: `ajuste`, quantity: adjustment, details: reason, timestamp: firebase.firestore.FieldValue.serverTimestamp() };
+            showLoading();
+            try {
+                await db.collection('products').doc(productId).update({ quantity: newQuantity });
+                await db.collection('movements').add(movement);
+                showToast(translations[currentLang].toastStockAdjusted, 'success');
+                document.getElementById('stock-adjustment-modal').classList.remove('visible');
+            } catch(err) { handleError(err, 'Ajuste de Stock'); } finally { hideLoading(); }
+        });
 
-        document.getElementById('dashboard-period-filter').addEventListener('click', e => { if (e.target.tagName === 'BUTTON') { document.querySelector('#dashboard-period-filter button.active').classList.remove('active'); e.target.classList.add('active'); calculateDashboardStats(e.target.dataset.period); } });
+        document.getElementById('dashboard-period-filter').addEventListener('click', e => {
+            if (e.target.tagName === 'BUTTON') {
+                document.querySelector('#dashboard-period-filter button.active').classList.remove('active');
+                e.target.classList.add('active');
+                calculateDashboardStats(e.target.dataset.period);
+            }
+        });
 
-        function sortTable(th, colIndex, type = 'string') { const table = th.closest('table'); const tbody = table.querySelector('tbody'); const dir = th.dataset.dir = -(th.dataset.dir || -1); const icon = th.querySelector('.sort-icon i'); Array.from(tbody.rows).sort((a, b) => { let aVal = a.cells[colIndex].dataset.sortValue || a.cells[colIndex].textContent.trim(); let bVal = b.cells[colIndex].dataset.sortValue || b.cells[colIndex].textContent.trim(); if (type === 'number') { aVal = parseFloat(aVal.replace(/[^0-9.-]+/g,"")) || 0; bVal = parseFloat(bVal.replace(/[^0-9.-]+/g,"")) || 0; } return (aVal > bVal ? 1 : (aVal < bVal ? -1 : 0)) * dir; }).forEach(r => tbody.appendChild(r)); document.querySelectorAll(`#${table.id} .sort-icon i`).forEach(i => i.className = 'fas fa-sort'); icon.className = `fas fa-sort-${dir > 0 ? 'up' : 'down'}`; }
-        function filterTable(tbodyId, colIndex) { const searchTerm = event.target.value.toLowerCase(); document.querySelectorAll(`#${tbodyId} tr`).forEach(row => { const cellText = row.cells[colIndex].textContent.toLowerCase(); row.style.display = cellText.includes(searchTerm) ? '' : 'none'; }); }
+        function sortTable(th, colIndex, type = 'string') {
+            const table = th.closest('table');
+            const tbody = table.querySelector('tbody');
+            const dir = th.dataset.dir = -(th.dataset.dir || -1);
+            const icon = th.querySelector('.sort-icon i');
+            Array.from(tbody.rows).sort((a, b) => {
+                let aVal = a.cells[colIndex].dataset.sortValue || a.cells[colIndex].textContent.trim();
+                let bVal = b.cells[colIndex].dataset.sortValue || b.cells[colIndex].textContent.trim();
+                if (type === 'number') { aVal = parseFloat(aVal.replace(/[^0-9.-]+/g,"")) || 0; bVal = parseFloat(bVal.replace(/[^0-9.-]+/g,"")) || 0; }
+                return (aVal > bVal ? 1 : (aVal < bVal ? -1 : 0)) * dir;
+            }).forEach(r => tbody.appendChild(r));
+            document.querySelectorAll(`#${table.id} .sort-icon i`).forEach(i => i.className = 'fas fa-sort');
+            icon.className = `fas fa-sort-${dir > 0 ? 'up' : 'down'}`;
+        }
+        function filterTable(tbodyId, colIndex) {
+            const searchTerm = event.target.value.toLowerCase();
+            document.querySelectorAll(`#${tbodyId} tr`).forEach(row => {
+                const cellText = row.cells[colIndex].textContent.toLowerCase();
+                row.style.display = cellText.includes(searchTerm) ? '' : 'none';
+            });
+        }
 
         function formatCsvCell(value) {
             let finalValue = value === null || value === undefined ? '' : String(value);
@@ -434,18 +876,49 @@
             return finalValue;
         }
         function downloadCSV(data, filename = 'relatorio.csv') {
-            if(data.length === 0) { showToast('Nenhum dado para exportar.', 'error'); return; }
+            if(data.length === 0) { showToast(translations[currentLang].toastNoDataToExport, 'error'); return; }
             const header = Object.keys(data[0]);
             const csv = [ header.join(','), ...data.map(row => header.map(fieldName => formatCsvCell(row[fieldName])).join(',')) ].join('\r\n');
-            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const blob = new Blob(["\uFEFF" + csv], { type: 'text/csv;charset=utf-8;' }); // Add BOM for Excel
             const link = document.createElement("a");
-            const url = URL.createObjectURL(blob); link.setAttribute("href", url); link.setAttribute("download", filename); link.style.visibility = 'hidden'; document.body.appendChild(link); link.click(); document.body.removeChild(link);
+            const url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", filename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
         }
         function exportProductsToCSV() { const data = products.map(p => ({ 'ID': p.id, 'Nome': p.name, 'Preco_Custo_MZN': p.purchasePrice, 'Preco_Venda_MZN': p.salePrice, 'Quantidade_Stock': p.quantity })); downloadCSV(data, 'relatorio_produtos.csv'); }
-        function exportHistoryToCSV() { const data = movements.map(m => ({ 'Data': new Date(m.timestamp.toDate()).toLocaleString('pt-MZ'), 'Produto': m.productName, 'Tipo': m.type, 'Quantidade': m.quantity, 'Total_Venda_MZN': m.totalSale || 0, 'Total_Custo_MZN': m.totalCost || 0, 'Lucro_MZN': m.totalProfit || 0, 'Detalhes': m.details })); downloadCSV(data, 'historico_movimentacoes.csv'); }
-        function exportProfitReportToCSV() { const reportData = {}; movements.forEach(mov => { if(mov.type !== 'saida (venda)') return; if(!reportData[mov.productId]) { reportData[mov.productId] = { name: mov.productName, units: 0, revenue: 0, profit: 0 }; } reportData[mov.productId].units += mov.quantity; reportData[mov.productId].revenue += mov.totalSale; reportData[mov.productId].profit += mov.totalProfit; }); if(Object.keys(reportData).length === 0) { showToast('Nenhum dado de lucro para exportar.', 'error'); return; } const data = Object.values(reportData).map(item => ({ 'Produto': item.name, 'Unidades_Vendidas': item.units, 'Receita_Total_MZN': item.revenue.toFixed(2), 'Lucro_Total_MZN': item.profit.toFixed(2), 'Margem_Media_Perc': (item.revenue > 0 ? (item.profit/item.revenue)*100 : 0).toFixed(1) })); downloadCSV(data, 'relatorio_lucros.csv'); }
+        function exportHistoryToCSV() { const data = movements.map(m => ({ 'Data': new Date(m.timestamp.toDate()).toLocaleString(currentLang), 'Produto': m.productName, 'Tipo': m.type, 'Quantidade': m.quantity, 'Total_Venda_MZN': m.totalSale || 0, 'Total_Custo_MZN': m.totalCost || 0, 'Lucro_MZN': m.totalProfit || 0, 'Detalhes': m.details })); downloadCSV(data, 'historico_movimentacoes.csv'); }
+        function exportProfitReportToCSV() {
+            const reportData = {};
+            movements.forEach(mov => {
+                if(mov.type !== 'saida (venda)') return;
+                if(!reportData[mov.productId]) { reportData[mov.productId] = { name: mov.productName, units: 0, revenue: 0, profit: 0 }; }
+                reportData[mov.productId].units += mov.quantity; reportData[mov.productId].revenue += mov.totalSale; reportData[mov.productId].profit += mov.totalProfit;
+            });
+            if(Object.keys(reportData).length === 0) { showToast(translations[currentLang].toastNoProfitDataToExport, 'error'); return; }
+            const data = Object.values(reportData).map(item => ({ 'Produto': item.name, 'Unidades_Vendidas': item.units, 'Receita_Total_MZN': item.revenue.toFixed(2), 'Lucro_Total_MZN': item.profit.toFixed(2), 'Margem_Media_Perc': (item.revenue > 0 ? (item.profit/item.revenue)*100 : 0).toFixed(1) }));
+            downloadCSV(data, 'relatorio_lucros.csv');
+        }
 
-        document.addEventListener('DOMContentLoaded', () => {});
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeToggle = document.getElementById('theme-toggle');
+            themeToggle.addEventListener('click', toggleTheme);
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            if (savedTheme) { setTheme(savedTheme); } else if (prefersDark) { setTheme('dark'); } else { setTheme('light'); }
+
+            const langIcon = document.getElementById('lang-icon');
+            const langDropdown = document.getElementById('lang-dropdown');
+            langIcon.addEventListener('click', (event) => { event.stopPropagation(); langDropdown.classList.toggle('visible'); });
+            window.addEventListener('click', () => { if (langDropdown.classList.contains('visible')) { langDropdown.classList.remove('visible'); } });
+            langDropdown.addEventListener('click', (e) => { if (e.target.tagName === 'A') { e.preventDefault(); setLanguage(e.target.dataset.lang); } });
+
+            const savedLang = localStorage.getItem('language') || 'pt';
+            setLanguage(savedLang);
+        });
     </script>
 </body>
 </html>
